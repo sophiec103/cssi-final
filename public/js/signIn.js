@@ -1,3 +1,5 @@
+let googleUser;
+
 const signIn = () => {
   var provider = new firebase.auth.GoogleAuthProvider();
   // console.log(provider)
@@ -8,9 +10,12 @@ const signIn = () => {
     var credential = result.credential;
     var token = credential.accessToken;
     
+
     // The signed-in user info.
     var user = result.user;
-    window.location = 'mainPage.html';
+    userCheck();
+    console.log(user + " has signed in!");
+    // window.location = 'mainPage.html';
   }).catch((error) => {
     // Handle Errors here.
     var errorCode = error.code;
@@ -27,4 +32,42 @@ const signIn = () => {
     };
     console.log(err);
   });
+}
+
+const userCheck = (event) => {
+    firebase.auth().onAuthStateChanged(function(user) {
+        if (user) {
+            console.log('Logged in as: ' + user.displayName);
+            googleUser = user;
+            checkIfRegistered(user);
+        } 
+        
+        else {
+            // If not logged in, navigate back to login page.
+            window.location = 'index.html'; 
+        }
+  });
+}
+
+const checkIfRegistered = (user) => {
+    const usersRef = firebase.database().ref(`users`);
+
+    usersRef.child(`${googleUser.uid}`).get().then((snapshot) => {
+        if (snapshot.exists()) {
+            console.log("We are registered!")
+            window.location = "mainPage.html"
+        } 
+        else {
+            console.log("not registered :(");
+            window.location = "register.html"
+            // do this last: 
+            //             firebase.database().ref(`users/${googleUser.uid}`).push({
+            //     title: "tests"
+            // });
+
+        }
+
+        }).catch((error) => {
+            console.error(error);
+        })
 }
