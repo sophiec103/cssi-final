@@ -1,0 +1,21 @@
+.btn {
+    outline: none;
+    border: none;
+    background: none;
+}
+.btn:focus {
+    outline:0;
+}
+
+.title{
+    font-size: 65px !important;
+}
+
+.subtitle{
+    font-size: 35px !important;
+}
+
+.gradient{
+background: rgb(255,202,223);
+background: linear-gradient(90deg, rgba(255,202,223,1) 0%, rgba(255,233,195,1) 50%, rgba(194,255,211,1) 100%);
+}
