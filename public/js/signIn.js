@@ -57,17 +57,14 @@ const checkIfRegistered = (user) => {
             console.log("We are registered!")
             window.location = "mainPage.html"
         } 
+        
         else {
             console.log("not registered :(");
             window.location = "register.html"
-            // do this last: 
-            //             firebase.database().ref(`users/${googleUser.uid}`).push({
-            //     title: "tests"
-            // });
-
         }
 
         }).catch((error) => {
             console.error(error);
         })
 }
+
