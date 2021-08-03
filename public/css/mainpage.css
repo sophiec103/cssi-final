@@ -15,7 +15,20 @@
     font-size: 35px !important;
 }
 
+.input, .uploadInput {
+  margin-top: 10px;
+  width: 95%;
+}
+
+#upload, #clear { 
+  margin: 30px;
+}
+
+.text {
+    color:black;
+}
+
 .gradient{
-background: rgb(255,202,223);
-background: linear-gradient(90deg, rgba(255,202,223,1) 0%, rgba(255,233,195,1) 50%, rgba(194,255,211,1) 100%);
+    background: rgb(255,202,223);
+    background: linear-gradient(90deg, rgba(255,202,223,1) 0%, rgba(255,233,195,1) 50%, rgba(194,255,211,1) 100%);
 }
