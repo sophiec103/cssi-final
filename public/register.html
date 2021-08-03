@@ -13,7 +13,7 @@ link to image (ideally their logo + transparent) -->
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Fire Notes</title>
+    <title>Register New User for University Webpage</title>
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
@@ -71,12 +71,53 @@ link to image (ideally their logo + transparent) -->
               </div>
 
               <div class="control">
-                <button class="button is-link is-fullwidth has-text-weight-medium is-medium" onclick="register()"> Register </button>
+                <button class="button is-link is-fullwidth has-text-weight-medium is-medium" onclick="toggleRegisterModal()"> Register </button>
               </div>
             </div>
             
           </div>
         </div>
+
+        <div id = "registerModal" class = "modal">
+            <div class = "modal-background"> 
+
+            </div>
+
+            <div class = "modal-card">
+                <section class = "modal-card-body">
+                    <p> Would you like to confirm these? You can always change them in settings later if needed.</p>
+                </section>
+
+                <footer class = "modal-card-footer">
+                    <button class = "button is-success" onclick = "register() "> 
+                        Confirm
+                    </button>
+
+                    <button class = "button" onclick = "toggleRegisterModal()"> 
+                        Cancel
+                    </button>
+                </footer>
+            </div>
+        </div>
+
+        <div id = "confirmedModal" class = "modal">
+            <div class = "modal-background"> 
+
+            </div>
+
+            <div class = "modal-card">
+                <section class = "modal-card-body">
+                    <p> You're all ready to go! Click on the button to visit your beautiful home page</p>
+                </section>
+
+                <footer class = "modal-card-footer">
+                    <button class = "button is-success" onclick = "window.location = 'mainPage.html'"> 
+                        Confirm
+                    </button>
+                </footer>
+            </div>
+        </div>
+    
       </div>
     </section>
     <script src="js/register.js"></script>

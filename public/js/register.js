@@ -24,4 +24,17 @@ const register = () => {
     document.querySelector("#nameInput").value = ""
     document.querySelector("#universityInput").value = ""
     document.querySelector("#logoInput").value = ""
+
+    toggleRegisterModal()
+    toggleConfirmedModal()
+    // need to add better transitions here
+    // window.location = "mainPage.html"
+}
+
+function toggleRegisterModal() {
+    document.querySelector("#registerModal").classList.toggle("is-active")
+}
+
+function toggleConfirmedModal() {
+    document.querySelector("#confirmedModal").classList.toggle("is-active")
 }
