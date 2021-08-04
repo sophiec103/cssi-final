@@ -5,14 +5,20 @@
     <meta charset="utf-8" />
   </head>
   <body>
-    <p>Google Calendar API Quickstart</p>
+
+    <p>Calendar</p>
 
     <!--Add buttons to initiate auth sequence and sign out-->
     <button id="authorize_button" style="display: none;">Authorize</button>
     <button id="signout_button" style="display: none;">Sign Out</button>
-    <button onclick="checkFirebase()">check</button>
 
-    <pre id="content" style="white-space: pre-wrap;"></pre>
+    <div>
+        <br>
+    </br>
+        <button id="new">Create New Calendar</button>
+    </div>
+
+
 
     <script defer src="/__/firebase/8.3.1/firebase-app.js"></script>
     <!-- include only the Firebase features as you need -->
@@ -24,5 +30,7 @@
       onload="this.onload=function(){};handleClientLoad()"
       onreadystatechange="if (this.readyState === 'complete') this.onload()">
     </script>
+
+    <pre id="content" style="white-space: pre-wrap;"></pre>
   </body>
 </html>

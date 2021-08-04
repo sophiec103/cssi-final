@@ -1,8 +1,8 @@
     let googleUser;
       
       // Client ID and API key from the Developer Console
-      var CLIENT_ID = '';
-      var API_KEY = '';
+      var CLIENT_ID = '1037003257945-fe42ra2cfj1hcg5tta9q5m566tg8l967.apps.googleusercontent.com';
+      var API_KEY = 'AIzaSyDXK3RSPU0tQ3i4SREJN4bZ1B6wzikZlVM';
 
       // Array of API discovery doc URLs for APIs used by the quickstart
       var DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest"];
@@ -14,6 +14,8 @@
       var authorizeButton = document.getElementById('authorize_button');
       var signoutButton = document.getElementById('signout_button');
 
+      //const newCalButton = document.getElementById('newcalendarbutton');
+
       /**
        *  On load, called to load the auth2 library and API client library.
        */
@@ -22,6 +24,15 @@
         console.log("libraries loaded");
       }
 
+
+    document.getElementById('new').addEventListener("click", myFunction);
+    
+    function myFunction()
+    {
+        console.log(hi);
+    }
+
+    
     // Use this to retain user state between html pages.
     const userCheck = (event) => {
             firebase.auth().onAuthStateChanged(function(user) {
@@ -36,15 +47,6 @@
             }
         });
     }
-
-      function checkFirebase() {
-        const pplRef = firebase.database().ref(`users/0SRtnbyaNcd0zM6VTb5zacgZTNn2`);
-        //gets the data about the user
-        pplRef.on('value', (snapshot) => {
-            const data = snapshot.val();
-            console.log(data);
-        });
-      }
 
       /**
        *  Initializes the API client library and sets up sign-in state
@@ -110,12 +112,37 @@
         pre.appendChild(textContent);
       }
 
+          //creates a new calendar
+    function listCalendars()
+    {
+        console.log("hi");
+
+        let events = gapi.client.calendarList.list().then(function(response) {
+          var events = response.result.items;
+
+          if (events.length > 0) {
+            for (i = 0; i < events.length; i++) {
+              console.log("calendar" + i);
+              var event = events[i];
+              var access = event.accessRole;
+              var summary = event.summary;
+              var primary = event.primary;
+              console.log("access: " + access + " summary: " + summary + " primary: " + primary);
+            }
+          } else {
+            console.log('No upcoming events found.');
+          }
+        });
+    }
+
+
       /**
        * Print the summary and start datetime/date of the next ten events in
        * the authorized user's calendar. If no events are found an
        * appropriate message is printed.
        */
       function listUpcomingEvents() {
+
         gapi.client.calendar.events.list({
           'calendarId': 'primary',
           'timeMin': (new Date()).toISOString(),
