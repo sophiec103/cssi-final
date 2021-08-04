@@ -96,13 +96,16 @@ const renderHTML = (list) => {
 
 const createCard = (restaurant) => {
     return `
-     <div class="column is-one-quarter">
+     <div class="column">
        <div class="card">
          <header class="card-header">
            <p class="card-header-title">${restaurant.restaurant_name}</p>
          </header>
          <div class="card-content">
-           <div class="content">${restaurant.website}</div>
+            <div class="content">${restaurant.address.formatted}</div>
+            <div class="content">${restaurant.hours}</div>
+            <div class="content">${restaurant.restaurant_phone}</div>
+            <div class="content">${restaurant.restaurant_website}</div>
          </div>
 
 
@@ -110,6 +113,7 @@ const createCard = (restaurant) => {
      </div>
    `;
 }
+
 
 
 
