@@ -5,11 +5,17 @@ const centerImageButton = document.querySelector("#centerImage");
 const uploadButton = document.querySelector("#upload");
 const deleteButton = document.querySelector("#clear");
 
-// modal buttons
+//modal buttons
 const deleteModal = document.querySelector("#closeButton");
 const cancelInput = document.querySelector("#cancelButton");
 const submitInput = document.querySelector("#confirmButton");
 const closeImgView = document.querySelector("#imgview-close");
+
+//image modal
+const imgDisplay = document.querySelector("#img-display");
+const imgViewDiv = document.querySelector("#imgview-div");
+const imgViewTitle = document.querySelector("#imgview-title");
+const imgViewDesc = document.querySelector("#imgview-desc");
 
 //upload input
 const titleInput = document.querySelector("#img-title");
@@ -24,11 +30,11 @@ window.onload = (event) => {
             const userData = firebase.database().ref(`users/${user.uid}`);
             userData.on('value', (snapshot) => {
                 const data = snapshot.val();
-                for(const id in data) {
+                for (const id in data) {
                     document.querySelector("#centerImg").src = data[id];
                     break; //logo is first element in user array with name, uni, logo (alpha order)
                 }
-            updateCards();
+                updateCards();
             });
         } else {
             window.location = 'index.html'; // If not logged in, navigate back to login page.
@@ -53,8 +59,13 @@ deleteModal.addEventListener("click", () => {
 
 //closes the modal when the cancel button is clicked
 cancelInput.addEventListener("click", () => {
-   closeModal();
+    closeModal();
 });
+
+//closes image display modal when the top-right "X" button is clicked
+closeImgView.addEventListener("click", () => {
+    imgDisplay.classList.remove("is-active");
+})
 
 //update file name in upload image modal when file is selected
 const fileInput = document.querySelector('#file-upload input[type=file]');
@@ -95,7 +106,7 @@ submitInput.addEventListener("click", () => {
     }
 });
 
-function closeModal(){
+function closeModal() {
     //disable modal
     uploadForm.classList.remove("is-active");
     //reset input fields
@@ -114,39 +125,47 @@ function updateCards() {
         .then((res) => {
             res.items.forEach((itemRef) => {
                 //all the items under listRef
-                console.log(itemRef._delegate._location.path_);
-                storageRef.child(itemRef._delegate._location.path_).getDownloadURL().then(function(url) {
-                var test = url;
-                    document.querySelector('#test').src = test;
+                storageRef.child(itemRef._delegate._location.path_).getDownloadURL().then(function (url) {
+                    var imgUrl = url;
+                    itemRef.getMetadata()
+                        .then((metadata) => {
+                            renderCard(imgUrl, metadata.customMetadata.Title, metadata.customMetadata.Description);
+                        })
+                    // document.querySelector('#test').src = imgUrl;
                 });
             });
         }).catch((error) => {
             console.log(error);
         });
-    // console.log(imgRef.listAll());
-    // imgRef.on('value', (db) => {
-    //     const data = db.val();
-    //     console.log(data)
-    //     // renderData(data);
-    // });
 }
 
-function renderData(data){
-    let html = "";
-    for (const dataKey in data){
-        cards++;
-        const img = data[dataKey];
-        const cardHtml = renderCard(img);
-        html += cardHtml;
+function renderCard(image, title, desc) {
+    cards++;
+    if (cards != 1 && cards % 4 == 1) { //create new row
+        var row = document.createElement("div");
+        row.classList.add("columns", "is-centered");
+        document.querySelector("#content").appendChild(row);
     }
-}
+    var column = document.createElement("div");
+    column.classList.add("column", "is-one-quarter", "mt-4");
+    var card = document.createElement("div");
+    card.classList.add("card", "p-4", "format");
+    column.appendChild(card);
+    var img = document.createElement("img");
+    img.classList.add("center");
+    img.src = image;
+    var img2 = document.createElement("img");
+    img2.classList.add("center");
+    img2.src = image;
+    card.appendChild(img);
+    var nodes = document.querySelectorAll(".columns");
+    nodes[nodes.length - 1].appendChild(column);
+    column.addEventListener("click", () => {
+        imgDisplay.classList.add("is-active");
+        imgViewDiv.innerHTML = "";
+        imgViewDiv.appendChild(img2);
+        imgViewTitle.innerText = title;
+        imgViewDesc.innerText = desc;
+    });
 
-function renderCard(img){
-    // for (let i = 1; i <= cards; i++) {
-    //     if (i != 1 && i % 3 == 1) {
-    //         var row = document.createElement("div");
-    //         row.classList.add("columns", "is-centered");
-    //         document.querySelector("#content").appendChild(row);
-    //     }
-    // }
 }
