@@ -64,7 +64,7 @@ cancelInput.addEventListener("click", () => {
 
 //closes image display modal when the top-right "X" button is clicked
 closeImgView.addEventListener("click", () => {
-    closeModal();
+    document.querySelector("#img-display").classList.remove("is-active");
 })
 
 //update file name in upload image modal when file is selected
@@ -119,6 +119,7 @@ function closeModal() {
 }
 
 function updateCards() {
+    document.querySelector("#content").innerHTML = `<div class="columns is-centered"></div>`;
     const storageRef = firebase.storage().ref();
     const imgRef = storageRef.child(`users/${googleUser.uid}`);
     imgRef.listAll()
