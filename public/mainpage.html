@@ -14,6 +14,7 @@
     <script defer src="/__/firebase/8.3.1/firebase-auth.js"></script>
     <script defer src="/__/firebase/8.3.1/firebase-database.js"></script>
     <script defer src="/__/firebase/init.js?useEmulator=true"></script>
+    <script defer src="/__/firebase/8.3.1/firebase-storage.js"></script>  
     <!-- <script src="js/signIn.js"></script> -->
 </head>
 
@@ -77,8 +78,7 @@
         <div class="columns is-centered">
             <div class="column is-one-third">
                 <button id="centerImage" class="btn">
-                    <img
-                        src="https://upload.wikimedia.org/wikipedia/en/thumb/6/6e/University_of_Waterloo_seal.svg/1200px-University_of_Waterloo_seal.svg.png" />
+                    <img id="centerImg"/>
                 </button>
             </div>
         </div>
@@ -119,7 +119,7 @@
                     <div class="field">
                         <div class="control">
                             <input id="img-title" class="input" type="text" placeholder="Title" />
-                            <input id="img-desc" class="input" placeholder="Description" />
+                            <textarea id="img-desc" class="textarea" placeholder="Description"></textarea>
                             <div id="file-upload" class="file has-name is-fullwidth uploadInput">
                                 <label class="file-label">
                                     <input class="file-input" type="file" name="resume">
@@ -160,10 +160,10 @@
                 </header>
                 <section class="modal-card-body">
                     <div id="imgview-div"></div>
-                    <p id="imgview-desc"></p>
-                    <p id="imgview-loc"></p>
-                    <h2 id="imgview-user"></h2>
+                    <p id="imgview-desc" class="text"></p>
                 </section>
+                <footer class="modal-card-foot">
+                </footer>
             </div>
         </div>
     </section>
