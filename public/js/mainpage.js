@@ -64,7 +64,7 @@ cancelInput.addEventListener("click", () => {
 
 //closes image display modal when the top-right "X" button is clicked
 closeImgView.addEventListener("click", () => {
-    imgDisplay.classList.remove("is-active");
+    closeModal();
 })
 
 //update file name in upload image modal when file is selected
