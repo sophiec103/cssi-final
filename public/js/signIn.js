@@ -15,7 +15,7 @@ const signIn = () => {
     var user = result.user;
     userCheck();
     console.log(user + " has signed in!");
-    // window.location = 'mainPage.html';
+    // window.location = 'mainpage.html';
   }).catch((error) => {
     // Handle Errors here.
     var errorCode = error.code;
@@ -55,7 +55,7 @@ const checkIfRegistered = (user) => {
     usersRef.child(`${googleUser.uid}`).get().then((snapshot) => {
         if (snapshot.exists()) {
             console.log("We are registered!")
-            window.location = "mainPage.html"
+            window.location = "mainpage.html"
         } 
         
         else {
