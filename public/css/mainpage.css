@@ -15,9 +15,8 @@
     font-size: 35px !important;
 }
 
-.input, .uploadInput {
+.input, .uploadInput, .textarea {
   margin-top: 10px;
-  width: 95%;
 }
 
 #upload, #clear { 

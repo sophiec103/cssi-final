@@ -116,7 +116,7 @@ function updateCards() {
                 //all the items under listRef
                 console.log(itemRef._delegate._location.path_);
                 storageRef.child(itemRef._delegate._location.path_).getDownloadURL().then(function(url) {
-                var img = url;
+                var test = url;
                     document.querySelector('#test').src = test;
                 });
             });
