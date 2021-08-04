@@ -1,5 +1,5 @@
 let googleUser;
-var cards = 0;
+let cards = 0;
 
 const centerImageButton = document.querySelector("#centerImage");
 const uploadButton = document.querySelector("#upload");
@@ -25,10 +25,10 @@ window.onload = (event) => {
             userData.on('value', (snapshot) => {
                 const data = snapshot.val();
                 for(const id in data) {
-                    console.log(data[id])
                     document.querySelector("#centerImg").src = data[id];
                     break; //logo is first element in user array with name, uni, logo (alpha order)
                 }
+            updateCards();
             });
         } else {
             window.location = 'index.html'; // If not logged in, navigate back to login page.
@@ -48,12 +48,12 @@ uploadButton.addEventListener("click", () => {
 
 //closes the modal when the top-right "X" button is clicked
 deleteModal.addEventListener("click", () => {
-    uploadForm.classList.remove("is-active");
+    closeModal();
 });
 
 //closes the modal when the cancel button is clicked
 cancelInput.addEventListener("click", () => {
-    uploadForm.classList.remove("is-active");
+   closeModal();
 });
 
 //update file name in upload image modal when file is selected
@@ -69,7 +69,6 @@ fileInput.onchange = () => {
 deleteButton.addEventListener("click", () => {
     if (confirm("Are you sure you want to clear all images from your gallery?")) {
         document.querySelector("#content").innerHTML = "";
-        cards = 0;
     }
 });
 
@@ -90,15 +89,64 @@ submitInput.addEventListener("click", () => {
                 'Description': desc
             }
         }).then(() => console.log('done!'));
-
-        // Resets the values of the input fields in the form
-        titleInput.value = "";
-        descInput.value = "";
-        document.querySelector('#file-upload .file-name').textContent = "No file uploaded"; //only changes display (file remains attached)
-        document.querySelector('#file-upload input[type=file]').value = null;
-        uploadForm.classList.remove("is-active");
+        closeModal();
     } else { //no file uploaded
         document.querySelector('#file-upload .file-name').textContent = "No file uploaded (required)";
     }
 });
 
+function closeModal(){
+    //disable modal
+    uploadForm.classList.remove("is-active");
+    //reset input fields
+    titleInput.value = "";
+    descInput.value = "";
+    document.querySelector('#file-upload .file-name').textContent = "No file uploaded"; //only changes display (file remains attached)
+    document.querySelector('#file-upload input[type=file]').value = null;
+    //update
+    updateCards();
+}
+
+function updateCards() {
+    const storageRef = firebase.storage().ref();
+    const imgRef = storageRef.child(`users/${googleUser.uid}`);
+    imgRef.listAll()
+        .then((res) => {
+            res.items.forEach((itemRef) => {
+                //all the items under listRef
+                console.log(itemRef._delegate._location.path_);
+                storageRef.child(itemRef._delegate._location.path_).getDownloadURL().then(function(url) {
+                var img = url;
+                    document.querySelector('#test').src = test;
+                });
+            });
+        }).catch((error) => {
+            console.log(error);
+        });
+    // console.log(imgRef.listAll());
+    // imgRef.on('value', (db) => {
+    //     const data = db.val();
+    //     console.log(data)
+    //     // renderData(data);
+    // });
+}
+
+function renderData(data){
+    let html = "";
+    for (const dataKey in data){
+        cards++;
+        const img = data[dataKey];
+        const cardHtml = renderCard(img);
+        html += cardHtml;
+    }
+}
+
+function renderCard(img){
+    // for (let i = 1; i <= cards; i++) {
+    //     if (i != 1 && i % 3 == 1) {
+    //         var row = document.createElement("div");
+    //         row.classList.add("columns", "is-centered");
+    //         document.querySelector("#content").appendChild(row);
+    //     }
+    // }
+}
