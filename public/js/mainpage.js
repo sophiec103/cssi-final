@@ -5,7 +5,7 @@ const centerImageButton = document.querySelector("#centerImage");
 const uploadButton = document.querySelector("#upload");
 const deleteButton = document.querySelector("#clear");
 
-//modal buttons
+// modal buttons
 const deleteModal = document.querySelector("#closeButton");
 const cancelInput = document.querySelector("#cancelButton");
 const submitInput = document.querySelector("#confirmButton");
