@@ -21,9 +21,15 @@ window.onload = (event) => {
         if (user) {
             console.log('Logged in as: ' + user.displayName);
             googleUser = user;
-            const logo = firebase.database().ref(`users/${user.uid}`);
-            document.querySelector("#centerImg").src = logo;
-            console.log(logo)
+            const userData = firebase.database().ref(`users/${user.uid}`);
+            userData.on('value', (snapshot) => {
+                const data = snapshot.val();
+                for(const id in data) {
+                    console.log(data[id])
+                    document.querySelector("#centerImg").src = data[id];
+                    break; //logo is first element in user array with name, uni, logo (alpha order)
+                }
+            });
         } else {
             window.location = 'index.html'; // If not logged in, navigate back to login page.
         }
