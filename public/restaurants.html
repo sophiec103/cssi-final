@@ -41,20 +41,51 @@
     <section class="hero is-fullheight is-default is-bold">
         <div class="hero-body">
             <div class="container has-text-centered">
-                <div class="columns is-vcentered">
-                    <div class="column is-6 is-offset-3">
+                <div class="columns is-centered">
+                    <div class="column is-8">
                         <h1 class="title is-2">
-                            University Login
+                            Restaurants
                         </h1>
                         <h2 class="subtitle is-4">
-                            Log in to access your personal university helper website! 
+                            Search for the best restaurants near your university! 
                         </h2>
-                        <br>
+
+                        <div class= "navbar is-inline-flex is-transparent" id = "restaurantRating">
+                            <div class="navbar-item">
+                                <div class="control">
+                                    <input class="input is-small has-text-centered" type="text" placeholder="zip code" id="zSearch">	
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class= "navbar is-inline-flex is-transparent" id = "restaurantPrice">
+                            <div class="navbar-item">
+                                <div class="control">
+                                    <input class="input is-small has-text-centered" type="text" placeholder="$" id="pSearch">	
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class= "navbar is-inline-flex is-transparent" id = "restaurantCuisine">
+                            <div class="navbar-item">
+                                <div class="control">
+                                    <input class="input is-small has-text-centered" type="text" placeholder="cuisine" id="cSearch">	
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <br></br>
+
                         <p class="has-text-centered">
                             <a class="button is-medium is-info is-outlined" onclick="searchRestaurants()">
                                 Search Restaurants
                             </a>
                         </p>
+
+                        <div id = "displayRestaurants">
+
+                        </div>  
+
                     </div>
                 </div>
             </div>
