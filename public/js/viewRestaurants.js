@@ -105,7 +105,6 @@ const createCard = (restaurant) => {
             <div class="content">${restaurant.address.formatted}</div>
             <div class="content">${restaurant.hours}</div>
             <div class="content">${restaurant.restaurant_phone}</div>
-            <div class="content">${restaurant.restaurant_website}</div>
          </div>
 
 

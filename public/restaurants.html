@@ -10,17 +10,11 @@
     <!-- <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet"> -->
     <link rel="stylesheet" href="https://unpkg.com/bulma@0.9.0/css/bulma.min.css" />
 
-    <!-- <style type="text/css">
-      html,
+    <style type="text/css">
+        html,
       body {
-          font-family: 'Open Sans';
-      }
-
-      img {
-          padding: 5px;
-          border: 1px solid #ccc;
-      } -->
-
+            background-color: #363636
+        }
     </style>
 
     <!-- update the version number as needed -->
@@ -30,19 +24,61 @@
     <script defer src="/__/firebase/8.3.1/firebase-database.js"></script>
     <script defer src="/__/firebase/init.js?useEmulator=true"></script>
     <script src="js/signIn.js"></script>
-    <!-- <script src = "https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js" integrity="sha512-bZS47S7sPOxkjU/4Bt0zrhEtWx0y0CRkhEp8IckzK+ltifIIE9EMIMTuT/mEzoIMewUINruDBIR/jJnbguonqQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script src = "https://cdn.jsdelivr.net/npm/node-yelp-fusion@1.0.4/node-yelp-fusion.min.js"></script> -->
-
 
   </head>
 
   <body>
-    <section class="hero is-fullheight is-default is-bold">
+      <nav class="navbar is-dark" role="navigation" aria-label="main navigation">
+        
+        <div class="navbar-brand">
+            <a class="navbar-item" href="https://bulma.io">
+                <img src="./pjs logo.png" width="59" height="28">
+            </a>
+
+            <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarI">
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+            </a>
+        </div>
+
+        <div id="navbarI" class="navbar-menu">
+            <div class="navbar-start">
+                <a class="navbar-item" href="mainpage.html">
+                    Home
+                </a>
+                <a class="navbar-item" href="calendar.html">
+                    Calendar
+                </a>
+                <a class="navbar-item" href="reminders.html">
+                    Reminders
+                </a>
+                <div class="navbar-item has-dropdown is-hoverable">
+                    <a class="navbar-link">
+                        More
+                    </a>
+                    <div class="navbar-dropdown">
+                        <a class="navbar-item" href="shop.html">
+                            Shop
+                        </a>
+                        <a class="navbar-item" href="restaurants.html">
+                            Food
+                        </a>
+                        <hr class="navbar-divider">
+                        <a class="navbar-item">
+                            Contact
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <section class="hero is-dark">
         <div class="hero-body">
             <div class="container has-text-centered">
                 <div class="columns is-centered">
-                    <div class="column is-8">
+                    <div class="column is-6">
                         <h1 class="title is-2">
                             Restaurants
                         </h1>
@@ -56,36 +92,29 @@
                                     <input class="input is-small has-text-centered" type="text" placeholder="zip code" id="zSearch">	
                                 </div>
                             </div>
-                        </div>
 
-                        <div class= "navbar is-inline-flex is-transparent" id = "restaurantPrice">
                             <div class="navbar-item">
                                 <div class="control">
                                     <input class="input is-small has-text-centered" type="text" placeholder="$" id="pSearch">	
                                 </div>
                             </div>
-                        </div>
 
-                        <div class= "navbar is-inline-flex is-transparent" id = "restaurantCuisine">
                             <div class="navbar-item">
                                 <div class="control">
                                     <input class="input is-small has-text-centered" type="text" placeholder="cuisine" id="cSearch">	
                                 </div>
                             </div>
-                        </div>
-                        
-                        <br></br>
 
-                        <p class="has-text-centered">
-                            <a class="button is-medium is-info is-outlined" onclick="searchRestaurants()">
-                                Search Restaurants
-                            </a>
-                        </p>
+                            <div class="has-text-centered" style = "margin: 5px">
+                                <a class="button is-small is-info is-outlined" onclick="searchRestaurants()">
+                                    Search
+                                </a>
+                            </div>
+                        
+                        </div>
 
                         <div id = "displayRestaurants">
-
                         </div>  
-
                     </div>
                 </div>
             </div>
