@@ -1,15 +1,17 @@
     let googleUser;
+    let calendarId;
       
       // Client ID and API key from the Developer Console
-      var CLIENT_ID = '1037003257945-fe42ra2cfj1hcg5tta9q5m566tg8l967.apps.googleusercontent.com';
-      var API_KEY = 'AIzaSyDXK3RSPU0tQ3i4SREJN4bZ1B6wzikZlVM';
+      // stored in separate secrets.js file - everyone needs their own file for code to work
+      var CLIENT_ID = clientID;
+      var API_KEY = apiKey;
 
       // Array of API discovery doc URLs for APIs used by the quickstart
       var DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest"];
 
       // Authorization scopes required by the API; multiple scopes can be
       // included, separated by spaces.
-      var SCOPES = "https://www.googleapis.com/auth/calendar.readonly";
+      var SCOPES = "https://www.googleapis.com/auth/calendar";
 
       var authorizeButton = document.getElementById('authorize_button');
       var signoutButton = document.getElementById('signout_button');
@@ -24,13 +26,6 @@
         console.log("libraries loaded");
       }
 
-
-    document.getElementById('new').addEventListener("click", myFunction);
-    
-    function myFunction()
-    {
-        console.log(hi);
-    }
 
     
     // Use this to retain user state between html pages.
@@ -112,26 +107,73 @@
         pre.appendChild(textContent);
       }
 
-          //creates a new calendar
+    //lists all calendars
     function listCalendars()
     {
-        console.log("hi");
+        let calendars = gapi.client.calendar.calendarList.list().then(function(response) {
+          var calendars = response.result.items;
 
-        let events = gapi.client.calendarList.list().then(function(response) {
-          var events = response.result.items;
-
-          if (events.length > 0) {
-            for (i = 0; i < events.length; i++) {
+          if (calendars.length > 0) {
+            for (i = 0; i < calendars.length; i++) {
               console.log("calendar" + i);
-              var event = events[i];
-              var access = event.accessRole;
-              var summary = event.summary;
-              var primary = event.primary;
-              console.log("access: " + access + " summary: " + summary + " primary: " + primary);
+              var calendar = calendars[i];
+              var summary = calendar.summary;
+              var id = calendar.id;
+              console.log(" summary: " + summary + " id: " + id);
             }
           } else {
-            console.log('No upcoming events found.');
+            console.log('No calendars found.');
           }
+        });
+    }
+    function sleep(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    async function getLastCalendar()
+    {
+        await lastCalendarId(); 
+        sleep(15000);
+        console.log("check id 3: " + calendarId);
+
+        //const createdCalender = gapi.client.calendar.calendarList.get(`${calendarId}`).execute();
+        //console.log(createdCalendar);
+        //console.log("check cal 1: " + createdCalendar.id);
+    }
+
+    function createCalendar()
+    {
+       let res = gapi.client.calendar.calendars.insert({
+                resource: {
+                    summary: "Secondary Calendar Made For Site"
+                        }
+                }).execute();
+
+       console.log("create cal button works");
+    }
+
+    //returns id of last calendar created
+    async function lastCalendarId()
+    {
+        let counter = 0;
+        let calendars = await gapi.client.calendar.calendarList.list().then(function(response){
+          var calendars = response.result.items;
+
+          if (calendars.length > 0) {
+            while(counter < (calendars.length-1)) {
+              counter++;
+              console.log("count" + counter);
+            }
+            console.log(calendars.length);
+            var calendar = calendars[counter];
+            console.log("check id 1: " + calendar.id);
+            calendarId = calendar.id;
+          } else {
+            console.log('No calendars found.');
+            calendarId = 0;
+          }
+        console.log("check id 2: " + calendarId);
+
         });
     }
 
