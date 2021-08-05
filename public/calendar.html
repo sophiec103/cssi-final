@@ -1,8 +1,12 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Google Calendar API Quickstart</title>
+    <title>Calendar</title>
     <meta charset="utf-8" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css"
+    />
   </head>
   <body>
 
@@ -21,13 +25,13 @@
     <div>
     <br>
     </br>
-        <button onclick="createCalendar()">Create Calendar For This Site</button>
+        <button onclick="saveCalendar()">Create And Save Calendar For this Site</button>
     </div>
 
     <div>
     <br>
     </br>
-        <button onclick="getLastCalendar()">Get last calendar ID</button>
+        <button onclick="getSiteCalendarId()">Get Site Calendar Id</button>
     </div>
 
     <div>
@@ -40,6 +44,16 @@
     <br>
     </br>
         <button onclick="addEvents()">add events to secondary calendar</button>
+    </div>
+
+    <div>
+    <br>
+    </br>
+        <button onclick="checkUser()">check user</button>
+    </div>
+
+    <div class="tile is-child is-primary">
+  <!--<iframe src="https://calendar.google.com/calendar/embed?src=fo3oa7h2lbppb4imav24mta8lg%40group.calendar.google.com&ctz=America%2FLos_Angeles" style="border: 0" width="800" height="600" frameborder="0" scrolling="no"></iframe>-->
     </div>
 
 

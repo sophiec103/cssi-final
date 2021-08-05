@@ -48,6 +48,17 @@
        *  listeners.
        */
       function initClient() {
+            firebase.auth().onAuthStateChanged(function(user) {
+            if (user) {
+                console.log('Logged in as: ' + user.displayName);
+                googleUser = user;
+                //checkIfRegistered(user);
+            } 
+            else {
+                // If not logged in, navigate back to login page.
+                window.location = 'index.html'; 
+            }
+        });
         gapi.client.init({
           apiKey: API_KEY,
           clientId: CLIENT_ID,
@@ -106,6 +117,39 @@
         var textContent = document.createTextNode(message + '\n');
         pre.appendChild(textContent);
       }
+
+      //checks which user is currently logged in
+      function checkUser()
+      {
+          console.log(`${googleUser.uid}`);
+          const userData = firebase.database().ref(`users/${googleUser.uid}`);
+          userData.on('value', (snapshot) => {
+            const data = snapshot.val();
+            console.log(data.name);
+        });
+    }
+
+    async function saveCalendar()
+    {
+        createCalendar();
+        await getLastCalendar();
+        sleep(15000);
+        firebase.database().ref(`users/${googleUser.uid}`).update({
+            calendar: calendarId,
+        });
+
+    }
+
+    function getSiteCalendarId()
+    {
+        const userData = firebase.database().ref(`users/${googleUser.uid}`);
+          userData.on('value', (snapshot) => {
+            const data = snapshot.val();
+            console.log(data.calendar);
+            calendarId = data.calendar;
+            console.log(calendarId);
+        });
+    }
 
     //lists all calendars
     function listCalendars()
@@ -168,7 +212,7 @@
           'orderBy': 'startTime'
         }).then(function(response) {
           var events = response.result.items;
-          appendPre('id' + calendarId + 'Upcoming events:');
+          appendPre('id: ' + calendarId + ' Upcoming events:');
 
           if (events.length > 0) {
             for (i = 0; i < events.length; i++) {
@@ -189,11 +233,13 @@
         return new Promise(resolve => setTimeout(resolve, ms));
     }
 
+    //calls lastCalendarId() function
     async function getLastCalendar()
     {
         await lastCalendarId(); 
         sleep(15000);
         console.log("check id 3: " + calendarId);
+        console.log("getLastCalendar() called")
     }
 
     function createCalendar()
@@ -204,10 +250,10 @@
                         }
                 }).execute();
 
-       console.log("create cal button works");
+       console.log("createCalendar() called");
     }
 
-    //returns id of last calendar created
+    //puts id of last calendar created in calendarId
     async function lastCalendarId()
     {
         let counter = 0;
@@ -230,6 +276,11 @@
         console.log("check id 2: " + calendarId);
 
         });
+    }
+
+    //changes settings to make calendar public
+    function makeCalendarPublic()
+    {
     }
 
 
