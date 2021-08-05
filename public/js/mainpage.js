@@ -22,14 +22,18 @@ const titleInput = document.querySelector("#img-title");
 const descInput = document.querySelector("#img-desc");
 
 window.onload = (event) => {
+    console.log("page loading")
     // Use this to retain user state between html pages.
     firebase.auth().onAuthStateChanged(function (user) {
         if (user) {
             console.log('Logged in as: ' + user.displayName);
             googleUser = user;
             const userData = firebase.database().ref(`users/${user.uid}`);
+
+            console.log("almost gonna snap")
             userData.on('value', (snapshot) => {
                 const data = snapshot.val();
+                console.log(data)
                 for (const id in data) {
                     document.querySelector("#centerImg").src = data[id];
                     break; //logo is first element in user array with name, uni, logo (alpha order)
