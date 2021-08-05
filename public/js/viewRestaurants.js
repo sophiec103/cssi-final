@@ -99,7 +99,7 @@ const createCard = (restaurant) => {
      <div class="column">
        <div class="card">
          <header class="card-header">
-           <p class="card-header-title">${restaurant.restaurant_name}</p>
+           <p class="card-header-title">${formatTitle(restaurant)}</p>
          </header>
          <div class="card-content">
             <div class="content">${restaurant.address.formatted}</div>
@@ -113,6 +113,13 @@ const createCard = (restaurant) => {
    `;
 }
 
+const formatTitle = (restaurant) => {
+    if (restaurant.price_range != "")
+        return restaurant.restaurant_name + ` (${restaurant.price_range})`
+    else
+        return restaurant.restaurant_name     
+
+}
 
 
 
