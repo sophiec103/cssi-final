@@ -8,7 +8,7 @@ input::placeholder {
 
 .card {
   overflow: hidden;
-  background-color: rgb(255,202,223) !important;
+  /* background-color: rgb(255,202,223) !important; */
   color: var(--bg);
 }
 
@@ -42,7 +42,7 @@ a:hover {
     font-size: 113px;
 }
 
-.content{
+.note-content{
     color: black !important;
 }
 
@@ -52,6 +52,12 @@ a:hover {
 
 .in{
     margin-bottom: 10px !important;
+}
+
+html, body { 
+  margin:0; 
+  padding:0; 
+  height:100%; 
 }
 
 .dark{

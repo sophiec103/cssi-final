@@ -30,7 +30,7 @@ const getNotes = (userId) => {
   let sortedCards = [];
   let labels = [];
   let addCard = `<div class="column is-one-quarter">
-                <div class="card" id="createCard">
+                <div class="card" id="id1">
                     <header class="card-header">
                         <p class="card-header-title">New Note</p>
                     </header>
@@ -47,6 +47,7 @@ const getNotes = (userId) => {
             </div>`
 const renderDataAsHtml = (data) => {
   let cards = addCard;
+  setRandomColor();
   cardTitles = [];
   fullCards = [];
   cardTimes = [];
@@ -90,7 +91,7 @@ function createNewLine(text){
    return text;
 }
 
-let counter = 0;
+let counter = 1;
 const createCard = (note, noteId) => {
    counter++;
    const text = createNewLine(note.text);
@@ -102,7 +103,7 @@ const createCard = (note, noteId) => {
            <p class="card-header-title">${note.title}</p>
          </header>
          <div class="card-content">
-           <div class="content">${text}</div>
+           <div class="content note-content">${text}</div>
             `
 
     for (let i = 0; i<note.labels.length; i++){
@@ -111,7 +112,7 @@ const createCard = (note, noteId) => {
               </span> &nbsp`
     }
 
-    s += ` <div class="content"><i>Created by ${name} <br> on ${note.created}</i></div>
+    s += ` <div class="content note-content"><i>Created by ${name} <br> on ${note.created}</i></div>
            </div>
          <footer class = "card-footer">
             <a 
@@ -210,10 +211,25 @@ function getRandomColor() {
 }
 
 function setRandomColor() {
+//   var style = document.createElement('style');
+//   style.innerHTML = `
+//   #id${counter} {
+//     background: ${getRandomColor()}
+//   }
+//   `;
+//   document.head.appendChild(style);
   var style = document.createElement('style');
+  var colour = "";
+  if(counter%3==1){
+    colour = "rgb(255,202,223)";
+  }else if (counter%3==2){
+    colour = "rgb(255,233,195)";
+  }else{
+    colour = "rgb(194,255,211)";
+  }
   style.innerHTML = `
   #id${counter} {
-    background: ${getRandomColor()}
+    background: ${colour}
   }
   `;
   document.head.appendChild(style);
@@ -270,6 +286,7 @@ function sortCardsI(arr, cards, n) {
 let titleCounter = 1;
 function sortCardsByTitle(){
     let cards = addCard;
+      setRandomColor();
     cardTimes = [];
     if (titleCounter%2==0) sortedCards = sortCards(cardTitles, sortedCards, cardTitles.length);
     else sortedCards = sortCardsI(cardTitles, sortedCards, cardTitles.length);
@@ -291,6 +308,7 @@ function sortCardsByTitle(){
 let timeCounter = 0;
 function sortCardsByTime(){
     let cards = addCard;
+      setRandomColor();
     cardTitles = [];
     if (timeCounter%2==0) sortedCards = sortCards(cardTimes, sortedCards, cardTimes.length);
     else sortedCards = sortCardsI(cardTimes, sortedCards, cardTimes.length);
@@ -336,6 +354,7 @@ function excludeLabel(label){
         document.querySelector("#id"+label).classList.add("is-active");
     }
         let cards = addCard;
+          setRandomColor();
     for (const noteKey in sortedCards) {
       const note = sortedCards[noteKey];
       if (note.title) { //avoid making undefined card for archive
