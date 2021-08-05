@@ -126,6 +126,65 @@
           }
         });
     }
+
+    //adds events to calendar whose id is in calendarId
+    function addEvents()
+    {
+        var event = {
+            'summary': 'Google I/O 2015',
+            'location': '800 Howard St., San Francisco, CA 94103',
+            'description': 'A chance to hear more about Google\'s developer products.',
+            'start': {
+                'dateTime': '2021-08-08T09:00:00-07:00',
+                'timeZone': 'America/Los_Angeles'
+            },
+            'end': {
+                'dateTime': '2021-08-08T17:00:00-07:00',
+                'timeZone': 'America/Los_Angeles'
+            },
+        };
+
+        var request = gapi.client.calendar.events.insert({
+            'calendarId': `${ calendarId }`,
+            'resource': event
+        });
+
+        request.execute(function(event) {
+            appendPre('Event created: ' + event.htmlLink);
+        });
+
+       console.log("add events button works");
+    }
+
+    //gets events of calendar whose id is in calendarId
+    function getCalendarEvents()
+    {
+ gapi.client.calendar.events.list({
+          'calendarId': `${calendarId}`,
+          'timeMin': (new Date()).toISOString(),
+          'showDeleted': false,
+          'singleEvents': true,
+          'maxResults': 10,
+          'orderBy': 'startTime'
+        }).then(function(response) {
+          var events = response.result.items;
+          appendPre('id' + calendarId + 'Upcoming events:');
+
+          if (events.length > 0) {
+            for (i = 0; i < events.length; i++) {
+              var event = events[i];
+              var when = event.start.dateTime;
+              if (!when) {
+                when = event.start.date;
+              }
+              appendPre(event.summary + ' (' + when + ')')
+            }
+          } else {
+            appendPre('No upcoming events found.');
+          }
+        });
+    }
+
     function sleep(ms) {
         return new Promise(resolve => setTimeout(resolve, ms));
     }
@@ -135,10 +194,6 @@
         await lastCalendarId(); 
         sleep(15000);
         console.log("check id 3: " + calendarId);
-
-        //const createdCalender = gapi.client.calendar.calendarList.get(`${calendarId}`).execute();
-        //console.log(createdCalendar);
-        //console.log("check cal 1: " + createdCalendar.id);
     }
 
     function createCalendar()
