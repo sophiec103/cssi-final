@@ -10,6 +10,13 @@
       href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css"
     />
     <link rel="stylesheet" href="style.css" type="text/css" />
+    <style type="text/css">
+        html,
+      body {
+            background-color: #363636
+        }
+    </style>
+    
     <style>
         .flip-card {
   background-color: transparent;
@@ -106,34 +113,49 @@
             </div>
         </div>
     </nav>
-    <section class="hero is-small notification is-info has-text-centered">
-      <div class="hero-body">
-        <p class="title">Shop/Recommendations</p>
-      </div>
-    </section>
 
-    <center>
-    <container>
-      <div class="field">
-        <label class="label">Choose a Category</label>
-        <div class="control">
-          <div class="select">
-            <select id = "category">
-              <option>Accessories</option>
-              <option>Bags </option>
-              <option>Essentials</option>
-              <option>Technology</option>
-            </select>
-          </div>
+    <section class="hero is-dark">
+        <div class="hero-body">
+            <div class="container has-text-centered">
+                <div class="columns is-centered">
+                    <div class="column is-6">
+                        <h1 class="title is-2">
+                            Shop
+                        </h1>
+                        <h2 class="subtitle is-4">
+                            Our recommendations for you!
+                        </h2>
+                    </div>
+                </div>
+
+                    <container>
+                        <div class="field">
+                            <!-- <label class="label">Choose a Category</label> -->
+                            <div class="control">
+                                <div class="select">
+                                    <select id = "category" onchange = "getCategory()">
+                                        <option> Select a category! </option>
+                                        <option>Accessories</option>
+                                        <option>Bags </option>
+                                        <option>Essentials</option>
+                                        <option>Technology</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- <div class="has-text-centered">
+                                <a class="button is-small is-info is-outlined" style = "  margin-top: 11px; margin-left: 10px" onclick="getCategory()">
+                                    Search
+                                </a>
+                        </div> -->
+                    </container>
+            </div>
         </div>
-      </div>
-
-      <button id="submit-button" onclick="getCategory()">submit</button>
-      </container>
-      </center>
 
         <div id="item-cards" class="columns is-multiline">
-    </div>
+        </div>
+    </section>
 
     <script defer src="/__/firebase/8.3.1/firebase-app.js"></script>
     <script defer src="/__/firebase/8.3.1/firebase-auth.js"></script>
