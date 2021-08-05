@@ -32,13 +32,13 @@
 }
 
 .format {
-  height: 350px;
+  height: 225px;
 }
 
 .center {
   display: block;
   margin-left: auto;
-  margin-right: auto;
+  margin-right: auto; 
   margin-top: auto;
   margin-bottom: auto;
   max-height: 100%;

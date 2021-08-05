@@ -1,7 +1,13 @@
 function getCategory()
 {
-    const category = document.querySelector('#category').value;
+    var category = document.querySelector('#category').value;
     console.log(category);
+
+    if (category == "Technology")
+        category = "Electronics"
+
+    if (category == "Essentials")
+        category = "essentials"
 
     const itemsRef = firebase.database().ref(`shopItems/${category}`);
     itemsRef.on('value', (db) => {

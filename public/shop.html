@@ -61,6 +61,51 @@
   </head>
 
   <body>
+    <nav class="navbar is-dark" role="navigation" aria-label="main navigation">
+        
+        <div class="navbar-brand">
+            <a class="navbar-item" href="/">
+                <img src="./pjs logo.png" width="59" height="28">
+            </a>
+
+            <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarI">
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+            </a>
+        </div>
+
+        <div id="navbarI" class="navbar-menu">
+            <div class="navbar-start">
+                <a class="navbar-item" href="mainpage.html">
+                    Home
+                </a>
+                <a class="navbar-item" href="calendar.html">
+                    Calendar
+                </a>
+                <a class="navbar-item" href="reminders.html">
+                    Reminders
+                </a>
+                <div class="navbar-item has-dropdown is-hoverable">
+                    <a class="navbar-link">
+                        More
+                    </a>
+                    <div class="navbar-dropdown">
+                        <a class="navbar-item" href="shop.html">
+                            Shop
+                        </a>
+                        <a class="navbar-item" href="restaurants.html">
+                            Food
+                        </a>
+                        <hr class="navbar-divider">
+                        <a class="navbar-item" href = "settings.html">
+                            Settings
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
     <section class="hero is-small notification is-info has-text-centered">
       <div class="hero-body">
         <p class="title">Shop/Recommendations</p>
@@ -74,10 +119,10 @@
         <div class="control">
           <div class="select">
             <select id = "category">
-              <option>computers</option>
-              <option>stationary</option>
-              <option>backpacks</option>
-              <option>misc</option>
+              <option>Accessories</option>
+              <option>Bags </option>
+              <option>Essentials</option>
+              <option>Technology</option>
             </select>
           </div>
         </div>

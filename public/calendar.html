@@ -3,9 +3,57 @@
   <head>
     <title>Google Calendar API Quickstart</title>
     <meta charset="utf-8" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css"
+    />
   </head>
   <body>
+    <nav class="navbar is-dark" role="navigation" aria-label="main navigation">
+        
+        <div class="navbar-brand">
+            <a class="navbar-item" href="/">
+                <img src="./pjs logo.png" width="59" height="28">
+            </a>
 
+            <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarI">
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+            </a>
+        </div>
+
+        <div id="navbarI" class="navbar-menu">
+            <div class="navbar-start">
+                <a class="navbar-item" href="mainpage.html">
+                    Home
+                </a>
+                <a class="navbar-item" href="calendar.html">
+                    Calendar
+                </a>
+                <a class="navbar-item" href="reminders.html">
+                    Reminders
+                </a>
+                <div class="navbar-item has-dropdown is-hoverable">
+                    <a class="navbar-link">
+                        More
+                    </a>
+                    <div class="navbar-dropdown">
+                        <a class="navbar-item" href="shop.html">
+                            Shop
+                        </a>
+                        <a class="navbar-item" href="restaurants.html">
+                            Food
+                        </a>
+                        <hr class="navbar-divider">
+                        <a class="navbar-item" href = "settings.html">
+                            Settings
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
     <p>Calendar</p>
 
     <!--Add buttons to initiate auth sequence and sign out-->
