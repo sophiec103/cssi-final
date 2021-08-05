@@ -31,8 +31,11 @@ window.onload = (event) => {
             userData.on('value', (snapshot) => {
                 const data = snapshot.val();
                 for (const id in data) {
-                    document.querySelector("#centerImg").src = data[id];
-                    break; //logo is first element in user array with name, uni, logo (alpha order)
+                    if(id == "logo"){
+                        document.querySelector("#centerImg").src = data[id];
+                    }else if(id == "name"){
+                        document.querySelector("#welcome").innerHTML = "Welcome, "+ data[id];
+                    }
                 }
                 updateCards();
             });
@@ -99,7 +102,7 @@ submitInput.addEventListener("click", () => {
                 'Title': title,
                 'Description': desc
             }
-        }).then(() => console.log('done!'));
+        }).then(() => setTimeout(updateCards, 100), console.log('done!'));
         closeModal();
     } else { //no file uploaded
         document.querySelector('#file-upload .file-name').textContent = "No file uploaded (required)";
@@ -114,12 +117,11 @@ function closeModal() {
     descInput.value = "";
     document.querySelector('#file-upload .file-name').textContent = "No file uploaded"; //only changes display (file remains attached)
     document.querySelector('#file-upload input[type=file]').value = null;
-    //update
-    updateCards();
 }
 
 function updateCards() {
     document.querySelector("#content").innerHTML = `<div class="columns is-centered"></div>`;
+    cards = 0;
     const storageRef = firebase.storage().ref();
     const imgRef = storageRef.child(`users/${googleUser.uid}`);
     imgRef.listAll()
@@ -144,7 +146,7 @@ function renderCard(image, title, desc) {
     cards++;
     if (cards != 1 && cards % 4 == 1) { //create new row
         var row = document.createElement("div");
-        row.classList.add("columns", "is-centered");
+        row.classList.add("columns");
         document.querySelector("#content").appendChild(row);
     }
     var column = document.createElement("div");
