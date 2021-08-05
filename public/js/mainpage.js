@@ -83,6 +83,18 @@ fileInput.onchange = () => {
 deleteButton.addEventListener("click", () => {
     if (confirm("Are you sure you want to clear all images from your gallery?")) {
         document.querySelector("#content").innerHTML = "";
+        cards = 0;
+        const storageRef = firebase.storage().ref();
+        const imgRef = storageRef.child(`users/${googleUser.uid}`);
+        imgRef.listAll()
+        .then((res) => {
+            res.items.forEach((itemRef) => {
+                //all the items under listRef
+                    itemRef.delete();
+            });
+        }).catch((error) => {
+            console.log(error);
+        });
     }
 });
 
