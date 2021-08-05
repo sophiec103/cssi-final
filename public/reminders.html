@@ -17,6 +17,12 @@
     <script defer src="/__/firebase/8.3.1/firebase-database.js"></script>
     <script defer src="/__/firebase/init.js?useEmulator=true"></script>
     <script defer src="js/reminders.js"></script>
+    <style type="text/css">
+        html,
+      body {
+            background-color: #363636
+        }
+    </style>
   </head>
   <body>
      <nav class="navbar is-dark" role="navigation" aria-label="main navigation">
@@ -82,9 +88,9 @@
     </section>
     <footer class="footer dark">
       <div class="container">
-        <div class="content has-text-centered">
+        <div class="content has-text-centered" id="access-archives">
           <p>
-            <i>Access the <a href="/archives.html">Archives</a></i>
+            <i>Access the <a href="javascript:showArchive()">Archives</a></i>
           </p>
         </div>
       </div>

@@ -1,5 +1,6 @@
 let googleUserId;
 let name;
+let archives = false;
 
 window.onload = (event) => {
   // Use this to retain user state between html pages.
@@ -26,7 +27,8 @@ window.onload = (event) => {
 };
 
 const getNotes = (userId) => {
-  const notesRef = firebase.database().ref(`users/${userId}/notes`).orderByChild('title');
+  let notesRef = firebase.database().ref(`users/${userId}/notes`).orderByChild('title');
+  if(archives)notesRef = firebase.database().ref(`users/${userId}/notes/archives`).orderByChild('title');
   notesRef.on('value', (snapshot) => {
     const data = snapshot.val();
     renderDataAsHtml(data);
@@ -55,7 +57,8 @@ const getNotes = (userId) => {
                 </div>
             </div>`
 const renderDataAsHtml = (data) => {
-  let cards = addCard;
+  let cards = "";
+  if (!archives) cards = addCard;
   setColor();
   cardTitles = [];
   fullCards = [];
@@ -104,6 +107,8 @@ let counter = 0;
 const createCard = (note, noteId) => {
    counter++;
    const text = createNewLine(note.text);
+   let archiveState = "Archive";
+   if(archives) archiveState = "Un-Archive";
    let s = ``;
    s += `
      <div class="column is-one-quarter">
@@ -134,7 +139,7 @@ const createCard = (note, noteId) => {
                 href = "#" 
                 class = "card-footer-item" 
                 onclick = "archiveNote('${noteId}')">
-                Archive
+                ${archiveState}
            </a>
            <a  
                 href = "#" 
@@ -151,7 +156,8 @@ const createCard = (note, noteId) => {
 
 function deleteNote(noteId){
     if (confirm("Are you sure you want to delete this note?")){
-      firebase.database().ref(`users/${googleUserId}/notes/${noteId}`).remove();
+      if(archives) firebase.database().ref(`users/${googleUserId}/notes/archives/${noteId}`).remove();
+      else firebase.database().ref(`users/${googleUserId}/notes/${noteId}`).remove();
     }
 }
 
@@ -164,7 +170,8 @@ function closeCreateModal(){
 
 const editNote = (noteId) => {
   const editNoteModal = document.querySelector('#editNoteModal');
-  const notesRef = firebase.database().ref(`users/${googleUserId}/notes/${noteId}`);
+  let notesRef = firebase.database().ref(`users/${googleUserId}/notes/${noteId}`);
+  if (archives) notesRef = firebase.database().ref(`users/${googleUserId}/notes/${noteId}`);
   notesRef.on('value', (snapshot) => {
     // const data = snapshot.val();
     // const noteDetails = data[noteId];
@@ -191,7 +198,8 @@ function saveEditedNote(){
     const noteId = document.querySelector('#noteId').value;
     labels = label.split(", ");
     const editedNote = {title, text, labels}; //shorted way for above when the var names are repeated
-    firebase.database().ref(`users/${googleUserId}/notes/${noteId}`).update(editedNote);
+    if(archives)firebase.database().ref(`users/${googleUserId}/notes/archives/${noteId}`).update(editedNote);
+    else firebase.database().ref(`users/${googleUserId}/notes/${noteId}`).update(editedNote);
     closeEditModal();
 }
 
@@ -200,11 +208,30 @@ function closeEditModal(){
   editNoteModal.classList.toggle('is-active');
 }
 
+function showArchive(){
+    if(archives){
+        document.querySelector("#access-archives").innerHTML = 
+            `<p>
+                <i>Access the <a href="javascript:showArchive()">Archives</a></i>
+            </p>`
+    }else{
+        document.querySelector("#access-archives").innerHTML = 
+        `<p>
+             <i>Return to <a href="javascript:showArchive()">Reminders</a></i>
+        </p>`
+    }
+    archives = !archives;
+    getNotes(googleUserId);
+}
+
 function archiveNote(noteId){
-  const notesRef = firebase.database().ref(`users/${googleUserId}/notes/${noteId}`);
+  let notesRef = firebase.database().ref(`users/${googleUserId}/notes/${noteId}`);
+  if(archives)notesRef = firebase.database().ref(`users/${googleUserId}/notes/archives/${noteId}`);
   notesRef.on('value', (snapshot) => {
     const note = snapshot.val();
-    firebase.database().ref(`users/${googleUserId}/notes/archive`).push({
+    let ref = firebase.database().ref(`users/${googleUserId}/notes/archives`);
+    if(archives)ref = firebase.database().ref(`users/${googleUserId}/notes`);
+    ref.push({
       title: note.title,
       text: note.text,
       time: note.time,
@@ -212,12 +239,13 @@ function archiveNote(noteId){
       labels: note.labels
     }) 
   }); 
-  firebase.database().ref(`users/${googleUserId}/notes/${noteId}`).remove();
+  if (archives) firebase.database().ref(`users/${googleUserId}/notes/archives/${noteId}`).remove();
+  else firebase.database().ref(`users/${googleUserId}/notes/${noteId}`).remove();
 }
 
-function getRandomColor() {
-  return "hsl(" + Math.random() * 361 + ", 100%, 90%)"
-}
+// function getRandomColor() {
+//   return "hsl(" + Math.random() * 361 + ", 100%, 90%)"
+// }
 
 function setColor() {
 //   var style = document.createElement('style');
@@ -294,7 +322,8 @@ function sortCardsI(arr, cards, n) {
 
 let titleCounter = 1;
 function sortCardsByTitle(){
-    let cards = addCard;
+    let cards = "";
+    if (!archives) cards = addCard;
       setColor();
     cardTimes = [];
     if (titleCounter%2==0) sortedCards = sortCards(cardTitles, sortedCards, cardTitles.length);
@@ -316,7 +345,8 @@ function sortCardsByTitle(){
 
 let timeCounter = 0;
 function sortCardsByTime(){
-    let cards = addCard;
+    let cards = "";
+    if (!archives) cards = addCard;
       setColor();
     cardTitles = [];
     if (timeCounter%2==0) sortedCards = sortCards(cardTimes, sortedCards, cardTimes.length);
@@ -348,7 +378,8 @@ function sortCardsByLabel(){
                     ${labels[i]}                   
                  </button>&nbsp`;
         }
-        let cards = addCard;    //display all cards
+        let cards = "";     //display all cards
+        if (!archives) cards = addCard;    
         for (const noteKey in sortedCards) { 
             const note = sortedCards[noteKey];
             if (note.title) { //avoid making undefined card for archive
@@ -377,7 +408,8 @@ function excludeLabel(label){
         selected.push(label);
         document.querySelector("#id"+label).classList.add("is-active");
     }
-        let cards = addCard;
+        let cards = "";
+        if (!archives) cards = addCard;
           setColor();
           counter=0;
     for (const noteKey in sortedCards) {
@@ -409,7 +441,8 @@ function includeLabel(label){
         selected.push(label);
         document.querySelector("#id"+label).classList.add("is-active");
     }
-        let cards = addCard;
+        let cards = "";
+        if (!archives) cards = addCard;
           setColor();
           counter=0;
     for (const noteKey in sortedCards) {
