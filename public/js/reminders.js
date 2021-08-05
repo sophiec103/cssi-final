@@ -6,9 +6,18 @@ window.onload = (event) => {
   firebase.auth().onAuthStateChanged(function(user) {
     if (user) {
       console.log('Logged in as: ' + user.displayName);
-      name = user.displayName;
       googleUserId = user.uid;
       getNotes(googleUserId);
+      name = user.displayName;
+      const userData = firebase.database().ref(`users/${user.uid}`);
+        userData.on('value', (snapshot) => {
+            const data = snapshot.val();
+            for (const id in data) {
+                if (id == "name") {
+                    name = data[id];
+                }
+            }
+        });
     } else {
       //if not logged in, navigate back to login page.
       window.location = 'index.html'; 
@@ -30,7 +39,7 @@ const getNotes = (userId) => {
   let sortedCards = [];
   let labels = [];
   let addCard = `<div class="column is-one-quarter">
-                <div class="card" id="id1">
+                <div class="card" id="id0">
                     <header class="card-header">
                         <p class="card-header-title">New Note</p>
                     </header>
@@ -47,7 +56,7 @@ const getNotes = (userId) => {
             </div>`
 const renderDataAsHtml = (data) => {
   let cards = addCard;
-  setRandomColor();
+  setColor();
   cardTitles = [];
   fullCards = [];
   cardTimes = [];
@@ -71,7 +80,7 @@ const renderDataAsHtml = (data) => {
 
       if (note.title) { //avoid making undefined card for archive
         cards += createCard(note, note.noteId);
-        setRandomColor();
+        setColor();
         cardTimes.push(note.time); 
     }    
   }
@@ -91,7 +100,7 @@ function createNewLine(text){
    return text;
 }
 
-let counter = 1;
+let counter = 0;
 const createCard = (note, noteId) => {
    counter++;
    const text = createNewLine(note.text);
@@ -210,7 +219,7 @@ function getRandomColor() {
   return "hsl(" + Math.random() * 361 + ", 100%, 90%)"
 }
 
-function setRandomColor() {
+function setColor() {
 //   var style = document.createElement('style');
 //   style.innerHTML = `
 //   #id${counter} {
@@ -220,9 +229,9 @@ function setRandomColor() {
 //   document.head.appendChild(style);
   var style = document.createElement('style');
   var colour = "";
-  if(counter%3==1){
+  if(counter%3==0){
     colour = "rgb(255,202,223)";
-  }else if (counter%3==2){
+  }else if (counter%3==1){
     colour = "rgb(255,233,195)";
   }else{
     colour = "rgb(194,255,211)";
@@ -286,7 +295,7 @@ function sortCardsI(arr, cards, n) {
 let titleCounter = 1;
 function sortCardsByTitle(){
     let cards = addCard;
-      setRandomColor();
+      setColor();
     cardTimes = [];
     if (titleCounter%2==0) sortedCards = sortCards(cardTitles, sortedCards, cardTitles.length);
     else sortedCards = sortCardsI(cardTitles, sortedCards, cardTitles.length);
@@ -294,7 +303,7 @@ function sortCardsByTitle(){
       const note = sortedCards[noteKey];
       if (note.title) { //avoid making undefined card for archive
         cards += createCard(note, note.noteId);
-        setRandomColor();
+        setColor();
         cardTimes.push(note.time); 
       }
     }
@@ -308,7 +317,7 @@ function sortCardsByTitle(){
 let timeCounter = 0;
 function sortCardsByTime(){
     let cards = addCard;
-      setRandomColor();
+      setColor();
     cardTitles = [];
     if (timeCounter%2==0) sortedCards = sortCards(cardTimes, sortedCards, cardTimes.length);
     else sortedCards = sortCardsI(cardTimes, sortedCards, cardTimes.length);
@@ -316,7 +325,7 @@ function sortCardsByTime(){
       const note = sortedCards[noteKey];
       if (note.title) { //avoid making undefined card for archive
         cards += createCard(note, note.noteId);
-        setRandomColor();
+        setColor();
         cardTitles.push(note.title); 
       }
     }   
@@ -328,10 +337,10 @@ function sortCardsByTime(){
 }
 
 let labelCounter = 0;
-let excluded = [];
+let selected = [];
 function sortCardsByLabel(){
     let html = ``;
-    excluded = [];
+    selected = [];
     labels.sort();
     if(labelCounter%2==0){
         for(let i = 0; i<labels.length; i++){
@@ -339,39 +348,87 @@ function sortCardsByLabel(){
                     ${labels[i]}                   
                  </button>&nbsp`;
         }
+        let cards = addCard;    //display all cards
+        for (const noteKey in sortedCards) { 
+            const note = sortedCards[noteKey];
+            if (note.title) { //avoid making undefined card for archive
+                cards += createCard(note, note.noteId);
+                setColor();
+            }
+        }document.querySelector('#app').innerHTML = cards;
+    }else{
+        for(let i = 0; i<labels.length; i++){
+        html += `<button class="button is-small is-outlined is-light is-info" id="id${labels[i]}" onclick = "includeLabel('${labels[i]}')">
+                    ${labels[i]}                   
+                 </button>&nbsp`;
+        }
+        document.querySelector('#app').innerHTML = ""; //clear cards
     }
     document.querySelector("#labelSort").innerHTML = html;
     labelCounter++;
 }
 
 function excludeLabel(label){
-    if (excluded.includes(label)){
-        excluded.splice(excluded.indexOf(label),1);
+    if (selected.includes(label)){
+        selected.splice(selected.indexOf(label),1);
         document.querySelector("#id"+label).classList.remove("is-active");
         document.querySelector("#id"+label).blur();
     }else{
-        excluded.push(label);
+        selected.push(label);
         document.querySelector("#id"+label).classList.add("is-active");
     }
         let cards = addCard;
-          setRandomColor();
+          setColor();
+          counter=0;
     for (const noteKey in sortedCards) {
       const note = sortedCards[noteKey];
       if (note.title) { //avoid making undefined card for archive
         let exclude = false;
         for(let i=0; i<note.labels.length; i++){
-            if(excluded.indexOf(note.labels[i])!=-1){
+            if(selected.indexOf(note.labels[i])!=-1){
                 exclude = true;
                 break;
             }
         }
         if(!exclude){
             cards += createCard(note, note.noteId);
-            setRandomColor();
+            setColor();
         }
       }
     }   
-    // Inject our string of HTML into our viewNotes.html page
+    // inject string of HTML into our viewNotes.html page
+    document.querySelector('#app').innerHTML = cards;
+}
+
+function includeLabel(label){
+    if (selected.includes(label)){
+        selected.splice(selected.indexOf(label),1);
+        document.querySelector("#id"+label).classList.remove("is-active");
+        document.querySelector("#id"+label).blur();
+    }else{
+        selected.push(label);
+        document.querySelector("#id"+label).classList.add("is-active");
+    }
+        let cards = addCard;
+          setColor();
+          counter=0;
+    for (const noteKey in sortedCards) {
+      const note = sortedCards[noteKey];
+      if (note.title) { //avoid making undefined card for archive
+        let include = false;
+        for(let i=0; i<note.labels.length; i++){
+            if(selected.indexOf(note.labels[i])!=-1){
+                include = true;
+                break;
+            }
+        }
+        if(include){
+            cards += createCard(note, note.noteId);
+            setColor();
+        }
+      }
+    }   
+    // inject string of HTML into our viewNotes.html page
     document.querySelector('#app').innerHTML = cards;
 }
 
