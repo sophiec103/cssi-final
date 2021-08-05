@@ -246,7 +246,8 @@
     {
        let res = gapi.client.calendar.calendars.insert({
                 resource: {
-                    summary: "Secondary Calendar Made For Site"
+                    'summary': 'Site Calendar',
+                    'timeZone': 'America/Los_Angeles'
                         }
                 }).execute();
 
@@ -281,6 +282,29 @@
     //changes settings to make calendar public
     function makeCalendarPublic()
     {
+        console.log("make public button works");
+
+        let event = {
+            'role': 'reader',
+            'scope': {
+                'type': 'default'
+            }
+        };
+
+        let request = gapi.client.calendar.acl.insert({
+            'calendarId': `${ calendarId }`,
+            'resource': event
+        }).execute();
+
+    }
+
+    function getEmbedLink()
+    {
+        console.log("embed link button works");
+        console.log(`<iframe src="https://calendar.google.com/calendar/embed?src=${calendarId}" style="border: 0" width="800" height="600" frameborder="0" scrolling="no"></iframe>`);
+        
+        let html = `<iframe src="https://calendar.google.com/calendar/embed?src=${calendarId}" style="border: 0" width="800" height="600" frameborder="0" scrolling="no"></iframe>`;
+        document.querySelector('#hold-calendar').innerHTML = html;
     }
 
 
