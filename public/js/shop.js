@@ -1,15 +1,21 @@
-function getCategory()
-{
+const getCategory = () => {
     var category = document.querySelector('#category').value;
     console.log(category);
+     
+    if (category == "Select a category!")
+        var itemsRef = firebase.database().ref(`shopItems`);
 
-    if (category == "Technology")
-        category = "Electronics"
+    else {
 
-    if (category == "Essentials")
-        category = "essentials"
+        if (category == "Technology")
+            category = "Electronics"
 
-    const itemsRef = firebase.database().ref(`shopItems/${category}`);
+        if (category == "Essentials")
+            category = "essentials"
+
+        var itemsRef = firebase.database().ref(`shopItems/${category}`);
+    }
+   
     itemsRef.on('value', (db) => {
         const data = db.val();
         renderData(data);
@@ -45,7 +51,7 @@ function renderItemCards(item)
         </div>
         <div class="flip-card-back">
           <h1 id = "item-name">${ item.name }</h1>
-          <p id = "item-price">$${ item.price }</p>
+          <p id = "item-price">${ item.price }</p>
           <p id = "item-desc">${ item.desc }</p>
         </div>
       </div>
