@@ -16,12 +16,13 @@
     <script defer src="/__/firebase/init.js?useEmulator=true"></script>
     <script defer src="/__/firebase/8.3.1/firebase-storage.js"></script>  
     <!-- <script src="js/signIn.js"></script> -->
+    <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
 </head>
 
 <body>
     <nav class="navbar is-dark" role="navigation" aria-label="main navigation">
         <div class="navbar-brand">
-            <a class="navbar-item" href="https://bulma.io">
+            <a class="navbar-item" href="/">
                 <img src="./pjs logo.png" width="59" height="28">
             </a>
 
@@ -51,11 +52,10 @@
                         <a class="navbar-item" href="shop.html">
                             Shop
                         </a>
-                        <a class="navbar-item" href="restaurants.html">
+                        <a class="navbar-item" href="food.html">
                             Food
                         </a>
                         <hr class="navbar-divider">
-
                         <a class="navbar-item" href = "settings.html">
 
                             Settings
@@ -95,12 +95,12 @@
         <div id="navbar" style="margin-bottom:20px">
             <div class="is-pulled-left">
                 <button id="clear" class="button is-outlined is-danger">
-                    Clear all Pictures
+                    Clear all Images
                 </button>
             </div>
             <div class="is-pulled-right">
                 <button id="upload" class="button is-outlined is-success">
-                    Upload a Picture
+                    Upload an Image
                 </button>
             </div>
         </div>
@@ -145,10 +145,10 @@
                     </div>
                 </section>
                 <footer class="modal-card-foot">
-                    <button id="confirmButton" class="button is-success">
+                    <button id="confirmButton" class="button is-outlined is-success">
                         Upload Image
                     </button>
-                    <button id="cancelButton" class="button is-danger">
+                    <button id="cancelButton" class="button is-outlined is-danger">
                         Cancel
                     </button>
                 </footer>
