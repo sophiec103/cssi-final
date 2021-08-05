@@ -133,7 +133,7 @@ window.onload = (event) => {
                 const data = snapshot.val();
                 for (const id in data) {
                     if(id == "university"){
-                        document.querySelector("#restaurant-sub").innerHTML = "Search for the best restaurants near "+ data[id];
+                        document.querySelector("#restaurant-sub").innerHTML = "Search for the best restaurants near "+ data[id] + "!";
                     }
                 }
             });
