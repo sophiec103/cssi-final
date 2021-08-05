@@ -10,7 +10,7 @@ window.onload = (event) => {
       googleUserId = user.uid;
       getNotes(googleUserId);
     } else {
-      // If not logged in, navigate back to login page.
+      //if not logged in, navigate back to login page.
       window.location = 'index.html'; 
     };
   });
@@ -141,7 +141,7 @@ const createCard = (note, noteId) => {
 
 function deleteNote(noteId){
     if (confirm("Are you sure you want to delete this note?")){
-      firebase.database().ref(`users/${googleUserId}/${noteId}`).remove();
+      firebase.database().ref(`users/${googleUserId}/notes/${noteId}`).remove();
     }
 }
 
@@ -191,7 +191,7 @@ function closeEditModal(){
 }
 
 function archiveNote(noteId){
-  const notesRef = firebase.database().ref(`users/${googleUserId}/${noteId}`);
+  const notesRef = firebase.database().ref(`users/${googleUserId}/notes/${noteId}`);
   notesRef.on('value', (snapshot) => {
     const note = snapshot.val();
     firebase.database().ref(`users/${googleUserId}/notes/archive`).push({
@@ -202,7 +202,7 @@ function archiveNote(noteId){
       labels: note.labels
     }) 
   }); 
-  firebase.database().ref(`users/${googleUserId}/${noteId}`).remove();
+  firebase.database().ref(`users/${googleUserId}/notes/${noteId}`).remove();
 }
 
 function getRandomColor() {
