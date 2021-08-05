@@ -41,7 +41,7 @@ const getNotes = (userId) => {
   let sortedCards = [];
   let labels = [];
   let addCard = `<div class="column is-one-quarter">
-                <div class="card" id="id0">
+                <div class="card" id="id1">
                     <header class="card-header">
                         <p class="card-header-title">New Note</p>
                     </header>
@@ -56,8 +56,11 @@ const getNotes = (userId) => {
                     </footer>
                 </div>
             </div>`
+
 const renderDataAsHtml = (data) => {
   let cards = "";
+  counter = 1;
+  if(archives) counter--;
   if (!archives) cards = addCard;
   setColor();
   cardTitles = [];
@@ -103,12 +106,12 @@ function createNewLine(text){
    return text;
 }
 
-let counter = 0;
+let counter = 1;
 const createCard = (note, noteId) => {
    counter++;
    const text = createNewLine(note.text);
    let archiveState = "Archive";
-   if(archives) archiveState = "Un-Archive";
+   if(archives) archiveState = "Unarchive";
    let s = ``;
    s += `
      <div class="column is-one-quarter">
@@ -120,10 +123,14 @@ const createCard = (note, noteId) => {
            <div class="content note-content">${text}</div>
             `
 
-    for (let i = 0; i<note.labels.length; i++){
-        s += `<span class="tag is-light is-info"> 
+    if (note.labels) {
+        for (let i = 0; i < note.labels.length; i++) {
+            if(note.labels[i]!=""){
+            s += `<span class="tag is-light is-info"> 
                 ${note.labels[i]}
               </span> &nbsp`
+            }
+        }
     }
 
     s += ` <div class="content note-content"><i>Created by ${name} <br> on ${note.created}</i></div>
@@ -158,7 +165,9 @@ function deleteNote(noteId){
     if (confirm("Are you sure you want to delete this note?")){
       if(archives) firebase.database().ref(`users/${googleUserId}/notes/archives/${noteId}`).remove();
       else firebase.database().ref(`users/${googleUserId}/notes/${noteId}`).remove();
+      getNotes(googleUserId);
     }
+    
 }
 
 function createModal(){
@@ -166,30 +175,36 @@ function createModal(){
 }
 function closeCreateModal(){
     document.querySelector("#createNoteModal").classList.remove("is-active");
+    document.querySelector('#noteTitle').value = "";
+    document.querySelector('#noteText').value = "";
+    document.querySelector('#tags').innerHTML = "";
+    arr = [];
 }
 
-const editNote = (noteId) => {
-  const editNoteModal = document.querySelector('#editNoteModal');
-  let notesRef = firebase.database().ref(`users/${googleUserId}/notes/${noteId}`);
-  if (archives) notesRef = firebase.database().ref(`users/${googleUserId}/notes/${noteId}`);
-  notesRef.on('value', (snapshot) => {
-    // const data = snapshot.val();
-    // const noteDetails = data[noteId];
-    // document.querySelector('#editTitleInput').value = noteDetails.title;
-    // document.querySelector('#editTextInput').value = noteDetails.text;
-    const note = snapshot.val();
-    document.querySelector('#editTitleInput').value = note.title;
-    document.querySelector('#editTextInput').value = note.text;
-    let labels = "";
-    for (let i = 0; i<(note.labels).length-1; i++){
-        labels += note.labels[i] + ", ";
-    }
-    labels += note.labels[(note.labels).length-1];
-    document.querySelector('#editLabelInput').value = labels;
-    document.querySelector('#noteId').value = noteId;
-  });
-  editNoteModal.classList.toggle('is-active');
-};
+function editNote (noteId) {
+    const editNoteModal = document.querySelector('#editNoteModal');
+    let notesRef = firebase.database().ref(`users/${googleUserId}/notes/${noteId}`);
+    if (archives) notesRef = firebase.database().ref(`users/${googleUserId}/notes/${noteId}`);
+    notesRef.on('value', (snapshot) => {
+        // const data = snapshot.val();
+        // const noteDetails = data[noteId];
+        // document.querySelector('#editTitleInput').value = noteDetails.title;
+        // document.querySelector('#editTextInput').value = noteDetails.text;
+        const note = snapshot.val();
+        document.querySelector('#editTitleInput').value = note.title;
+        document.querySelector('#editTextInput').value = note.text;
+        if (note.labels) {
+            let noteLabels = "";
+            for (let i = 0; i < (note.labels.length) - 1; i++) {
+                noteLabels += note.labels[i] + ", ";
+            }
+            noteLabels += note.labels[(note.labels).length - 1];
+            document.querySelector('#editLabelInput').value = noteLabels;
+        }
+        document.querySelector('#noteId').value = noteId;
+    });
+    editNoteModal.classList.toggle('is-active');
+}
 
 function saveEditedNote(){
     const title = document.querySelector('#editTitleInput').value;
@@ -197,7 +212,7 @@ function saveEditedNote(){
     const label = document.querySelector('#editLabelInput').value;
     const noteId = document.querySelector('#noteId').value;
     labels = label.split(", ");
-    const editedNote = {title, text, labels}; //shorted way for above when the var names are repeated
+    const editedNote = {title, text, labels};
     if(archives)firebase.database().ref(`users/${googleUserId}/notes/archives/${noteId}`).update(editedNote);
     else firebase.database().ref(`users/${googleUserId}/notes/${noteId}`).update(editedNote);
     closeEditModal();
@@ -230,17 +245,29 @@ function archiveNote(noteId){
   notesRef.on('value', (snapshot) => {
     const note = snapshot.val();
     let ref = firebase.database().ref(`users/${googleUserId}/notes/archives`);
-    if(archives)ref = firebase.database().ref(`users/${googleUserId}/notes`);
-    ref.push({
-      title: note.title,
-      text: note.text,
-      time: note.time,
-      created: note.created,
-      labels: note.labels
-    }) 
+    if(archives) ref = firebase.database().ref(`users/${googleUserId}/notes`);
+    if(note!=null){
+        if(note.labels!=null){
+            ref.push({
+            title: note.title,
+            text: note.text,
+            time: note.time,
+            created: note.created,
+            labels: note.labels
+            }) 
+        }else{
+            ref.push({
+            title: note.title,
+            text: note.text,
+            time: note.time,
+            created: note.created
+            }) 
+        }
+    }
   }); 
   if (archives) firebase.database().ref(`users/${googleUserId}/notes/archives/${noteId}`).remove();
   else firebase.database().ref(`users/${googleUserId}/notes/${noteId}`).remove();
+  getNotes(googleUserId);
 }
 
 // function getRandomColor() {
@@ -257,9 +284,9 @@ function setColor() {
 //   document.head.appendChild(style);
   var style = document.createElement('style');
   var colour = "";
-  if(counter%3==0){
+  if(counter%3==1){
     colour = "rgb(255,202,223)";
-  }else if (counter%3==1){
+  }else if (counter%3==2){
     colour = "rgb(255,233,195)";
   }else{
     colour = "rgb(194,255,211)";
@@ -411,7 +438,7 @@ function excludeLabel(label){
         let cards = "";
         if (!archives) cards = addCard;
           setColor();
-          counter=0;
+          counter = 1;
     for (const noteKey in sortedCards) {
       const note = sortedCards[noteKey];
       if (note.title) { //avoid making undefined card for archive
@@ -444,7 +471,7 @@ function includeLabel(label){
         let cards = "";
         if (!archives) cards = addCard;
           setColor();
-          counter=0;
+          counter = 1;
     for (const noteKey in sortedCards) {
       const note = sortedCards[noteKey];
       if (note.title) { //avoid making undefined card for archive
@@ -519,7 +546,7 @@ const createTag = (tag) => {
   });
 };
 
-let arr = [];
+let arr = []; //array of labels
 const inputField = document.querySelector("#noteLabel");
 inputField.addEventListener("change", event => {
     let text = inputField.value.trim();
