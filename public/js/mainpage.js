@@ -30,7 +30,6 @@ window.onload = (event) => {
             googleUser = user;
             const userData = firebase.database().ref(`users/${user.uid}`);
 
-            console.log("almost gonna snap")
             userData.on('value', (snapshot) => {
                 const data = snapshot.val();
                 console.log(data)

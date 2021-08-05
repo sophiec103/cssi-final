@@ -121,7 +121,27 @@ const formatTitle = (restaurant) => {
 
 }
 
-
+window.onload = (event) => {
+    console.log("page loading")
+    // Use this to retain user state between html pages.
+    firebase.auth().onAuthStateChanged(function (user) {
+        if (user) {
+            console.log('Logged in as: ' + user.displayName);
+            googleUser = user;
+            const userData = firebase.database().ref(`users/${user.uid}`);
+            userData.on('value', (snapshot) => {
+                const data = snapshot.val();
+                for (const id in data) {
+                    if(id == "university"){
+                        document.querySelector("#restaurant-sub").innerHTML = "Search for the best restaurants near "+ data[id];
+                    }
+                }
+            });
+        } else {
+            window.location = 'index.html'; // If not logged in, navigate back to login page.
+        }
+    });
+};
 
 
 
