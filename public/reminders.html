@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="https://favicon.io/emoji-favicons/memo" />
+    <title>Reminders</title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/bulma@0.9.0/css/bulma.min.css" />
+	  <link rel="stylesheet" href="css/reminders.css">
+    <!-- update the version number as needed -->
+    <script defer src="/__/firebase/8.3.1/firebase-app.js"></script>
+    <!-- include only the Firebase features as you need -->
+    <script defer src="/__/firebase/8.3.1/firebase-auth.js"></script>
+    <script defer src="/__/firebase/8.3.1/firebase-database.js"></script>
+    <script defer src="/__/firebase/init.js?useEmulator=true"></script>
+    <script defer src="js/reminders.js"></script>
+  </head>
+  <body>
+     <nav class="navbar is-dark" role="navigation" aria-label="main navigation">
+        <div class="navbar-brand">
+            <a class="navbar-item" href="https://bulma.io">
+                <img src="./pjs logo.png" width="59" height="28">
+            </a>
+
+            <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarI">
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+            </a>
+        </div>
+
+        <div id="navbarI" class="navbar-menu">
+            <div class="navbar-start">
+                <a class="navbar-item" href="mainpage.html">
+                    Home
+                </a>
+                <a class="navbar-item" href="calendar.html">
+                    Calendar
+                </a>
+                <a class="navbar-item" href="reminders.html">
+                    Reminders
+                </a>
+                <div class="navbar-item has-dropdown is-hoverable">
+                    <a class="navbar-link">
+                        More
+                    </a>
+                    <div class="navbar-dropdown">
+                        <a class="navbar-item" href="shop.html">
+                            Shop
+                        </a>
+                        <a class="navbar-item" href="restaurants.html">
+                            Food
+                        </a>
+                        <hr class="navbar-divider">
+                        <a class="navbar-item">
+                            Settings
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <section class="dark full-height">
+    <div class="container">
+      <div class="section">
+        <div class="columns">
+          <div class="column has-text-centered">
+            <h1 class="title">Reminders</h1>
+            <p class="has-text-right">Sort by <a href="javascript:sortCardsByTitle()">Title </a>|<a href="javascript:sortCardsByTime()"> Time </a>|<a href="javascript:sortCardsByLabel()"> Label </a></p><br>
+            <div id="labelSort"></div>
+          </div>
+        </div>
+        <div id="app" class="columns is-multiline">
+            <!-- Note cards will render here -->
+        </div>
+      </div>
+    </div>
+    <br>
+    </section>
+    <footer class="footer dark">
+      <div class="container">
+        <div class="content has-text-centered">
+          <p>
+            <i>Access the <a href="/archives.html">Archives</a></i>
+          </p>
+        </div>
+      </div>
+    </footer>
+    <div id="editNoteModal" class="modal">
+        <div class="modal-background"></div>
+        <div class="modal-card">
+                        <header class="modal-card-head"><p class="modal-card-title">Edit Note</p></header>
+            <section class="modal-card-body">
+                <b><p>Title</p></b>
+                <input class="input is-normal in" id="editTitleInput" type="text">
+                <br>
+                <b><p>Labels</p></b>
+                <input class="input is-normal in" id="editLabelInput" type="text">
+                <br>
+                <b><p>Note</p></b>
+                <!-- <input class="input is-normal" id="editTextInput" type="text"> -->
+                <textarea class="textarea is-normal in" id="editTextInput" type="text"></textarea>
+                <input id="noteId" type="hidden">
+            </section>
+            <footer class="modal-card-foot">
+                <button class="button is-success" onclick="saveEditedNote()">
+                    Save changes
+                </button>
+                <button class="button" onclick="closeEditModal()">Cancel</button>
+            </footer>
+        </div>
+    </div>
+
+    <div id="createNoteModal" class="modal">
+        <div class="modal-background"></div>
+        <div class="modal-card">
+            <header class="modal-card-head"><p class="modal-card-title">Create a New Note</p></header>
+            <section class="modal-card-body">
+                <b><p>Title</p></b>
+                <input class="input in is-normal" id="noteTitle" type="text">
+                <br>
+                <b><p>Labels</p></b>
+                <input class="input is-normal" id="noteLabel" type="text">
+                <div class="field" id="tags"></div>
+                <b><p>Note</p></b>
+                <textarea class="textarea in is-normal" id="noteText" type="text"></textarea>
+                <input id="noteId" type="hidden">
+            </section>
+            <footer class="modal-card-foot">
+                <button class="button is-link has-text-weight-medium" onclick="handleNoteSubmit()">Create Note</button>
+                </button>
+                <button class="button" onclick="closeCreateModal()">Cancel</button>
+            </footer>
+        </div>
+    </div>
+    </body>
+
+</html>
