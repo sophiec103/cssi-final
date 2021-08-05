@@ -1,0 +1,293 @@
+<!-- REGISTER FOR NEW ACCOUNT HERE:
+
+
+preferred name?
+
+what school?
+
+link to image (ideally their logo + transparent) -->
+
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Change settings for University Webpage</title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/bulma@0.9.0/css/bulma.min.css" />
+      <link rel="stylesheet" href="css/writeNote.css">
+    <link rel="stylesheet" href="css/style.css" />
+    <!-- update the version number as needed -->
+    <script defer src="/__/firebase/8.3.1/firebase-app.js"></script>
+    <!-- include only the Firebase features as you need -->
+    <script defer src="/__/firebase/8.3.1/firebase-auth.js"></script>
+    <script defer src="/__/firebase/8.3.1/firebase-database.js"></script>
+    <script defer src="/__/firebase/init.js?useEmulator=true"></script>
+    <script src = "/js/register.js"></script> 
+  </head>
+  <body>
+
+    <!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title> University Login Page </title>
+
+    <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"> -->
+
+    <!-- <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet"> -->
+    <link rel="stylesheet" href="https://unpkg.com/bulma@0.9.0/css/bulma.min.css" />
+
+    <style type="text/css">
+        html,
+      body {
+            background-color: #363636
+        }
+    </style>
+
+    <!-- update the version number as needed -->
+    <script defer src="/__/firebase/8.3.1/firebase-app.js"></script>
+    <!-- include only the Firebase features as you need -->
+    <script defer src="/__/firebase/8.3.1/firebase-auth.js"></script>
+    <script defer src="/__/firebase/8.3.1/firebase-database.js"></script>
+    <script defer src="/__/firebase/init.js?useEmulator=true"></script>
+    <script src="js/signIn.js"></script>
+
+  </head>
+
+  <body>
+      <nav class="navbar is-dark" role="navigation" aria-label="main navigation">
+        
+        <div class="navbar-brand">
+            <a class="navbar-item" href="https://bulma.io">
+                <img src="./pjs logo.png" width="59" height="28">
+            </a>
+
+            <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarI">
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+            </a>
+        </div>
+
+        <div id="navbarI" class="navbar-menu">
+            <div class="navbar-start">
+                <a class="navbar-item" href="mainpage.html">
+                    Home
+                </a>
+                <a class="navbar-item" href="calendar.html">
+                    Calendar
+                </a>
+                <a class="navbar-item" href="reminders.html">
+                    Reminders
+                </a>
+                <div class="navbar-item has-dropdown is-hoverable">
+                    <a class="navbar-link">
+                        More
+                    </a>
+                    <div class="navbar-dropdown">
+                        <a class="navbar-item" href="shop.html">
+                            Shop
+                        </a>
+                        <a class="navbar-item" href="restaurants.html">
+                            Food
+                        </a>
+                        <hr class="navbar-divider">
+                        <a class="navbar-item" href = "settings.html">
+                            Settings
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <section class="hero is-dark">
+        <div class="hero-body">
+            <div class="container has-text-centered">
+                <div class="columns is-centered">
+                    <div class="column is-3">
+                        <h1 class="title is-2">
+                            Settings
+                        </h1>
+                        <h2 class="subtitle is-4">
+                            Edit your preferences here!
+                        </h2>
+
+                        <div class="field">
+                            <label class="label" style = "color:white; text-align: left">Preferred Name</label>
+                            <div class="control">
+                                <input class="input is-medium" type="text" id="nameInput">
+                            </div>
+                        </div>
+
+                        <div class="field">                                 
+                            <label class="label" style = "color:white; text-align: left">University</label>
+                            <div class="control">
+                                <input class="input is-medium" type="text" id="universityInput">
+                            </div>
+                        </div>
+
+                        <div class="field">
+                            <label class="label"style = "color:white; text-align: left">Logo</label>
+                            <div class="control">
+                                <input class="input is-medium" type="text" id="logoInput">
+                            </div>
+                        </div>
+
+                        <div class="control">
+                            <button class="button is-link is-fullwidthhas-text-weight-medium is-medium" onclick="toggleRegisterModal()"> Update </button>
+                        </div>
+
+                    </div>
+                </div>   
+            
+                <div id = "registerModal" class = "modal">
+                    <div class = "modal-background"> 
+
+                    </div>
+
+                    <div class = "modal-card">
+                        <section class = "modal-card-body">
+                            <p style = "color:black; text-align: left;"> Would you like to confirm these? You can always change them in settings later if needed.</p>
+                        </section>
+
+                        <footer class = "modal-card-footer">
+                            <button class = "button is-success" onclick = "register() "> 
+                                Contfirm
+                            </button>
+
+                            <button class = "button" onclick = "toggleRegisterModal()"> 
+                                Cancel
+                            </button>
+                        </footer>
+                    </div>
+                </div>
+
+                <div id = "confirmedModal" class = "modal">
+                    <div class = "modal-background"> 
+
+                    </div>
+
+                    <div class = "modal-card">
+                        <section class = "modal-card-body">
+                            <p style = "color:black; text-align:left"> You're all ready to go! Click on the button to visit your beautiful home page</p>
+                        </section>
+
+                        <footer class = "modal-card-footer">
+                            <button class = "button is-success" onclick = "window.location = 'mainpage.html'"> 
+                                Confirm
+                            </button>
+                        </footer>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script src = "/js/viewRestaurants.js"></script>
+
+  </body>
+</html>
+
+
+
+    <!-- <section class="hero is-fullheight">
+      <div class="hero-body">
+        <div class="container has-text-centered">
+          <div class="columns is-8 is-variable ">
+
+            
+            <div class="column is-two-thirds has-text-left">
+              <h1 class="title is-1">What's on your mind?</h1>
+              <h1 class="title is-3">
+                “The most beautiful things are those that madness prompts and reason writes."
+              </h1>
+              <h1 class="subtitle is-5">
+                —Andre Gide
+              </h1>
+              <a href="viewNotes.html"><button class="button is-link has-text-weight-medium is-medium is-centered">Click Here</button></a>
+              to view your notes.
+            </div>
+
+
+            <div class="column is-one-third has-text-left">
+              <div class="field">
+                <label class="label">Preferred Name</label>
+                <div class="control">
+                  <input class="input is-medium" type="text" id="nameInput">
+                </div>
+              </div>
+
+              <div class="field">
+                <label class="label">University</label>
+                <div class="control">
+                  <input class="input is-medium" type="text" id="universityInput">
+                </div>
+              </div>
+
+              <div class="field">
+                <label class="label">Logo</label>
+                <div class="control">
+                  <input class="input is-medium" type="text" id="logoInput">
+                </div>
+              </div>
+
+              <div class="control">
+                <button class="button is-link is-fullwidth has-text-weight-medium is-medium" onclick="toggleRegisterModal()"> Update </button>
+              </div>
+            </div>
+            
+          </div>
+        </div>
+
+        <div id = "registerModal" class = "modal">
+            <div class = "modal-background"> 
+
+            </div>
+
+            <div class = "modal-card">
+                <section class = "modal-card-body">
+                    <p> Would you like to confirm these? You can always change them in settings later if needed.</p>
+                </section>
+
+                <footer class = "modal-card-footer">
+                    <button class = "button is-success" onclick = "register() "> 
+                        Confirm
+                    </button>
+
+                    <button class = "button" onclick = "toggleRegisterModal()"> 
+                        Cancel
+                    </button>
+                </footer>
+            </div>
+        </div>
+
+        <div id = "confirmedModal" class = "modal">
+            <div class = "modal-background"> 
+
+            </div>
+
+            <div class = "modal-card">
+                <section class = "modal-card-body">
+                    <p> You're all ready to go! Click on the button to visit your beautiful home page</p>
+                </section>
+
+                <footer class = "modal-card-footer">
+                    <button class = "button is-success" onclick = "window.location = 'mainPage.html'"> 
+                        Confirm
+                    </button>
+                </footer>
+            </div>
+        </div>
+    
+      </div>
+    </section>
+    <script src="js/register.js"></script>
+  </body>
+</html>
+ -->
