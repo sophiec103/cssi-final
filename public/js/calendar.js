@@ -1,5 +1,7 @@
     let googleUser;
     let calendarId;
+    let calendarExists;
+    let timezone;
       
       // Client ID and API key from the Developer Console
       // stored in separate secrets.js file - everyone needs their own file for code to work
@@ -47,8 +49,8 @@
        *  Initializes the API client library and sets up sign-in state
        *  listeners.
        */
-      function initClient() {
-            firebase.auth().onAuthStateChanged(function(user) {
+      async function initClient() {
+            await firebase.auth().onAuthStateChanged(function(user) {
             if (user) {
                 console.log('Logged in as: ' + user.displayName);
                 googleUser = user;
@@ -58,6 +60,8 @@
                 // If not logged in, navigate back to login page.
                 window.location = 'index.html'; 
             }
+            sleep(2000);
+            checkForCalendar();
         });
         gapi.client.init({
           apiKey: API_KEY,
@@ -118,17 +122,6 @@
         pre.appendChild(textContent);
       }
 
-      //checks which user is currently logged in
-      function checkUser()
-      {
-          console.log(`${googleUser.uid}`);
-          const userData = firebase.database().ref(`users/${googleUser.uid}`);
-          userData.on('value', (snapshot) => {
-            const data = snapshot.val();
-            console.log(data.name);
-        });
-    }
-
     async function saveCalendar()
     {
         createCalendar();
@@ -138,15 +131,37 @@
             calendar: calendarId,
         });
 
+        updateCalendarDirections();
+
+    }
+
+    function updateCalendarDirections()
+    {
+        listCalendars();
+        document.querySelector('#before-calendar').style.visibility = "hidden";
+        afterCalOptions();
+    }
+
+    async function renderSiteCalendar()
+    {
+        const userData = firebase.database().ref(`users/${googleUser.uid}`);
+        await userData.on('value', async (snapshot) => {
+            const data = snapshot.val();
+            console.log(data.calendar);
+            calendarId = data.calendar;
+            doDisplay()
+            console.log(calendarId);
+        });
     }
 
     function getSiteCalendarId()
     {
         const userData = firebase.database().ref(`users/${googleUser.uid}`);
-          userData.on('value', (snapshot) => {
+        userData.on('value', async (snapshot) => {
             const data = snapshot.val();
             console.log(data.calendar);
             calendarId = data.calendar;
+            doDisplay()
             console.log(calendarId);
         });
     }
@@ -163,7 +178,8 @@
               var calendar = calendars[i];
               var summary = calendar.summary;
               var id = calendar.id;
-              console.log(" summary: " + summary + " id: " + id);
+              var timezone = calendar.timeZone;
+              console.log(" summary: " + summary + " id: " + id + " timezone: " + timezone);
             }
           } else {
             console.log('No calendars found.');
@@ -175,15 +191,14 @@
     function addEvents()
     {
         var event = {
-            'summary': 'Google I/O 2015',
-            'location': '800 Howard St., San Francisco, CA 94103',
+            'summary': 'test',
             'description': 'A chance to hear more about Google\'s developer products.',
             'start': {
-                'dateTime': '2021-08-08T09:00:00-07:00',
+                'dateTime': '2021-08-09T09:00:00-07:00',
                 'timeZone': 'America/Los_Angeles'
             },
             'end': {
-                'dateTime': '2021-08-08T17:00:00-07:00',
+                'dateTime': '2021-08-09T17:00:00-07:00',
                 'timeZone': 'America/Los_Angeles'
             },
         };
@@ -193,16 +208,13 @@
             'resource': event
         });
 
-        request.execute(function(event) {
-            appendPre('Event created: ' + event.htmlLink);
-        });
-
        console.log("add events button works");
     }
 
     //gets events of calendar whose id is in calendarId
     function getCalendarEvents()
     {
+        console.log(calendarId);
  gapi.client.calendar.events.list({
           'calendarId': `${calendarId}`,
           'timeMin': (new Date()).toISOString(),
@@ -212,7 +224,7 @@
           'orderBy': 'startTime'
         }).then(function(response) {
           var events = response.result.items;
-          appendPre('id: ' + calendarId + ' Upcoming events:');
+          console.log('id: ' + calendarId + ' Upcoming events:');
 
           if (events.length > 0) {
             for (i = 0; i < events.length; i++) {
@@ -221,10 +233,10 @@
               if (!when) {
                 when = event.start.date;
               }
-              appendPre(event.summary + ' (' + when + ')')
+              console.log(event.summary + ' (' + when + ')')
             }
           } else {
-            appendPre('No upcoming events found.');
+            console.log('No upcoming events found.');
           }
         });
     }
@@ -247,7 +259,7 @@
        let res = gapi.client.calendar.calendars.insert({
                 resource: {
                     'summary': 'Site Calendar',
-                    'timeZone': 'America/Los_Angeles'
+                    'timeZone': `${timezone}`,
                         }
                 }).execute();
 
@@ -298,13 +310,80 @@
 
     }
 
-    function getEmbedLink()
+    async function getEmbedLink()
     {
-        console.log("embed link button works");
+        console.log("getting embed link");
         console.log(`<iframe src="https://calendar.google.com/calendar/embed?src=${calendarId}" style="border: 0" width="800" height="600" frameborder="0" scrolling="no"></iframe>`);
-        
+        console.log("id: " + calendarId);
         let html = `<iframe src="https://calendar.google.com/calendar/embed?src=${calendarId}" style="border: 0" width="800" height="600" frameborder="0" scrolling="no"></iframe>`;
         document.querySelector('#hold-calendar').innerHTML = html;
+    }
+
+    //if no calendar:
+    //1. give user option to choose timezone and then create calendar
+    //2. save calendar id to database - "saved!"
+    //3. give user button to view calendar - calls afterCalOptions()
+    function beforeCalOptions()
+    {
+        console.log("you've reached beforeCalOptions()")
+        listCalendars();
+        document.querySelector('#before-calendar').style.visibility = 'visible';
+
+    }
+
+    function getTimezone()
+    {
+        console.log("getting timezone");
+        timezone = document.querySelector('#timezone-select').value;
+        console.log("timezone: " + timezone);
+
+        firebase.database().ref(`users/${googleUser.uid}`).update({
+            timezone: `${timezone}`,
+        });
+
+        let html = `
+        <h1 class="subtitle is-4 is-dark">Saved!</h1>
+        <button class="button is-small is-dark" id="submit-button" onclick="saveCalendar()">Next Step</button>
+        `;
+        document.querySelector('#hold-directions').innerHTML = html;
+    }
+
+    async function afterCalOptions(){
+
+        await renderSiteCalendar();
+    }
+
+    async function doDisplay(){
+        await getEmbedLink();
+        document.querySelector('#after-calendar').style.visibility = 'visible';
+    }
+
+
+    async function checkForCalendar()
+    {
+        console.log("checking for calendar rn");
+        await firebase.database().ref(`users/${googleUser.uid}/calendar`).once("value", snapshot => {
+            if (snapshot.exists()){
+                console.log("exists!");
+                const cal = snapshot.val();
+                calendarExists = true;
+            }
+            else{
+                console.log("does not exist");
+                calendarExists = false;
+            }
+        });
+        sleep(1500);
+        
+        if(calendarExists == true)
+        {
+            afterCalOptions();
+        }
+        else
+        {
+            beforeCalOptions();
+
+        }
     }
 
 
