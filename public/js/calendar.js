@@ -89,10 +89,12 @@
         if (isSignedIn) {
           authorizeButton.style.display = 'none';
           signoutButton.style.display = 'block';
+          document.querySelector('#inform-user').innerHTML = "";
           listUpcomingEvents();
         } else {
           authorizeButton.style.display = 'block';
           signoutButton.style.display = 'none';
+          document.querySelector('#inform-user').innerHTML = `<h1 class="subtitle is-4 has-text-white">Warning: Only users that are signed in can create a calendar/add events. Click the sign in button to sign in.</h1>`;
         }
       }
 
@@ -123,16 +125,52 @@
       }
 
     async function saveCalendar()
+    {//from createCalendar();
+
+       let html = `
+        <center>
+        <h1 class="subtitle is-4 is-dark">Calendar Created!</h1>
+        <button class="button is-small is-dark" id="submit-button" onclick="viewCalendar()">View Calendar</button>
+        </center>
+        `;
+        document.querySelector('#hold-directions').innerHTML = html;
+
+                //from lastCalendarId()
+       let counter = 0;
+        let calendars = gapi.client.calendar.calendarList.list().then(function(response){
+          var calendars = response.result.items;
+
+          if (calendars.length > 0) {
+            while(counter < (calendars.length-1)) {
+              counter++;
+              console.log("count" + counter);
+            }
+            console.log(calendars.length);
+            var calendar = calendars[counter];
+            console.log("check id 1: " + calendar.id);
+            calendarId = calendar.id;
+          } else {
+            console.log('No calendars found.');
+            calendarId = 0;
+          }
+        console.log("check id 2: " + calendarId);
+
+        });
+
+    }
+
+    async function viewCalendar()
     {
-        createCalendar();
-        await getLastCalendar();
-        sleep(15000);
+
+        //from original saveCalendar()
+        console.log("check id 3: " + calendarId);
+        console.log("updating firebase now");
+
         firebase.database().ref(`users/${googleUser.uid}`).update({
             calendar: calendarId,
         });
 
         updateCalendarDirections();
-
     }
 
     function updateCalendarDirections()
@@ -190,23 +228,48 @@
     //adds events to calendar whose id is in calendarId
     function addEvents()
     {
+        const userData = firebase.database().ref(`users/${googleUser.uid}`);
+        userData.on('value', async (snapshot) => {
+            const data = snapshot.val();
+            console.log(data.timezone);
+            timezone = data.timezone;
+            console.log(timezone);
+        });
+
+        const eventTitle = document.querySelector('#event-title').value;
+        const eventDesc = document.querySelector('#event-desc').value;
+        const eventStartDate = document.querySelector('#event-start-date').value;
+        const eventEndDate = document.querySelector('#event-end-date').value;
+
+        console.log(eventTitle);
+        console.log(eventDesc);
+        console.log(eventStartDate);
+        console.log(eventEndDate);
+        console.log(timezone);
+
+        document.querySelector('#event-title').value = "";
+        document.querySelector('#event-desc').value = "";
+        document.querySelector('#event-start-date').value = "";
+        document.querySelector('#event-end-date').value = "";
+
         var event = {
-            'summary': 'test',
-            'description': 'A chance to hear more about Google\'s developer products.',
+            'summary': `${eventTitle}`,
+            'description': `${eventDesc}`,
             'start': {
-                'dateTime': '2021-08-09T09:00:00-07:00',
-                'timeZone': 'America/Los_Angeles'
+                'date': `${eventStartDate}`,
             },
             'end': {
-                'dateTime': '2021-08-09T17:00:00-07:00',
-                'timeZone': 'America/Los_Angeles'
+                'date': `${eventEndDate}`,
+                'timeZone': `${timezone}`
             },
         };
 
         var request = gapi.client.calendar.events.insert({
             'calendarId': `${ calendarId }`,
             'resource': event
-        });
+        }).execute();
+
+        getEmbedLink();
 
        console.log("add events button works");
     }
@@ -214,8 +277,10 @@
     //gets events of calendar whose id is in calendarId
     function getCalendarEvents()
     {
+        let html = '';
+
         console.log(calendarId);
- gapi.client.calendar.events.list({
+        gapi.client.calendar.events.list({
           'calendarId': `${calendarId}`,
           'timeMin': (new Date()).toISOString(),
           'showDeleted': false,
@@ -229,15 +294,88 @@
           if (events.length > 0) {
             for (i = 0; i < events.length; i++) {
               var event = events[i];
-              var when = event.start.dateTime;
+              var when = event.start.date;
+              var title = event.summary;
+              var desc = event.description;
               if (!when) {
-                when = event.start.date;
+                when = event.start.dateTime;
               }
-              console.log(event.summary + ' (' + when + ')')
+              if (!desc) {
+                desc = "";
+              }
+              console.log(event.summary + ' (' + when + ')');
+              
+              let eventHtml = `<div class = "tile is-parent">
+                                <div style = "background-color: white; padding: 4%;"class = "tile is-child is-body is-light">
+                                    <p class = "is-size-7"><b>Event Name:</b> ${title}</p>
+                                    <p class = "is-size-7"><b>Event Description:</b> ${desc}</p>
+                                    <p class = "is-size-7"><b>Event Date and Time:</b> ${when}</p>
+                                </div>
+                            </div>`;
+              html += eventHtml;
             }
           } else {
-            console.log('No upcoming events found.');
+            let eventHtml = `<div class = "tile is-parent">
+                                <div style = "background-color: white; padding: 4%;"class = "tile is-child is-body is-light">
+                                    <p class = "is-size-7">No Events found.</p>
+                                </div>
+                            </div>`;
+              html += eventHtml;
           }
+
+          document.querySelector('#hold-upcoming-events').innerHTML = html;
+        });
+
+    }
+
+    function getPrimaryCalendarEvents()
+    {
+        let html = '';
+
+        gapi.client.calendar.events.list({
+          'calendarId': 'primary',
+          'timeMin': (new Date()).toISOString(),
+          'showDeleted': false,
+          'singleEvents': true,
+          'maxResults': 10,
+          'orderBy': 'startTime'
+        }).then(function(response) {
+          var events = response.result.items;
+          console.log('id: ' + calendarId + ' Upcoming events:');
+
+          if (events.length > 0) {
+            for (i = 0; i < events.length; i++) {
+              var event = events[i];
+              var when = event.start.date;
+              var title = event.summary;
+              var desc = event.description;
+              if (!when) {
+                when = event.start.dateTime;
+              }
+              if (!desc) {
+                desc = "";
+              }
+              console.log(event.summary + ' (' + when + ')');
+              
+              let eventHtml = `<div class = "tile is-parent">
+                                <div style = "background-color: white; padding: 4%;"class = "tile is-child is-body is-light">
+                                    <p class = "is-size-7"><b>Event Name:</b> ${title}</p>
+                                    <p class = "is-size-7"><b>Event Description:</b> ${desc}</p>
+                                    <p class = "is-size-7"><b>Event Date and Time:</b> ${when}</p>
+                                </div>
+                            </div>`;
+              html += eventHtml;
+            }
+          } else {
+            let eventHtml = `<div class = "tile is-parent">
+                                <div style = "background-color: white; padding: 4%;"class = "tile is-child is-body is-light">
+                                    <p class = "is-size-7">No Events found.</p>
+                                </div>
+                            </div>`;
+              html += eventHtml;
+          }
+
+          document.querySelector('#hold-upcoming-events').innerHTML = html;
         });
     }
 
@@ -313,9 +451,9 @@
     async function getEmbedLink()
     {
         console.log("getting embed link");
-        console.log(`<iframe src="https://calendar.google.com/calendar/embed?src=${calendarId}" style="border: 0" width="800" height="600" frameborder="0" scrolling="no"></iframe>`);
+        console.log(`<iframe src="https://calendar.google.com/calendar/embed?src=${calendarId}" style="border: 0" width="500" height="400" frameborder="0" scrolling="no"></iframe>`);
         console.log("id: " + calendarId);
-        let html = `<iframe src="https://calendar.google.com/calendar/embed?src=${calendarId}" style="border: 0" width="800" height="600" frameborder="0" scrolling="no"></iframe>`;
+        let html = `<iframe src="https://calendar.google.com/calendar/embed?src=${calendarId}" style="border: 0" width="500" height="400" frameborder="0" scrolling="no"></iframe>`;
         document.querySelector('#hold-calendar').innerHTML = html;
     }
 
@@ -341,9 +479,20 @@
             timezone: `${timezone}`,
         });
 
+        let res = gapi.client.calendar.calendars.insert({
+                resource: {
+                    'summary': 'Site Calendar',
+                    'timeZone': `${timezone}`,
+                        }
+                }).execute();
+
+       console.log("createCalendar() called");
+
         let html = `
-        <h1 class="subtitle is-4 is-dark">Saved!</h1>
-        <button class="button is-small is-dark" id="submit-button" onclick="saveCalendar()">Next Step</button>
+        <center>
+        <h1 class="subtitle is-4 is-dark">Saved Your Settings!</h1>
+        <button class="button is-small is-dark" id="submit-button" onclick="saveCalendar()">Create Calendar</button>
+        </center>
         `;
         document.querySelector('#hold-directions').innerHTML = html;
     }

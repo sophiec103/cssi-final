@@ -59,6 +59,13 @@
                     </div>
                 </div>
             </div>
+        <div class="navbar-end">
+            <a class="navbar-item">
+                <div>
+                    <button class="button is-normal is-light" id="authorize_button" style="display: none;">Authorize</button>
+                    <button class="button is-normal is-light" id="signout_button" style="display: none;">Sign Out</button> 
+                </div>  
+            </a>
         </div>
     </nav>
 
@@ -68,25 +75,20 @@
 
     <!--Add buttons to initiate auth sequence and sign out-->
     <div id = "hold-auth">
-        <center>
-            <button id="authorize_button" style="display: none;">Authorize</button>
-            <button id="signout_button" style="display: none;">Sign Out</button>
-        </center>
+            <center>
+                <div id ="inform-user">
+                </div>
+            </center>
     </div>
-
-
-     <div class="tile" id = "before-calendar" style="visibility: visible;">
-      <div class="tile is-parent is-vertical">
+    <div id = "container" style="position: relative;">
+        <div class="columns is-centered">
+                    <div class="column is-4">
+        <div class="tile" id = "before-calendar" style="visibility: hidden; position: absolute; ">
+            <div class="tile is-parent is-vertical">
         <article style="background-color: #ffcadf;"class="tile is-child notification">
             <center>
-                <button onclick="makeCalendarPublic()">make site calendar public</button>
-                <button onclick="getEmbedLink()">get embed link</button>
-                <button onclick="getSiteCalendarId()">Get Site Calendar Id</button>
-                <button onclick="saveCalendar()">Create And Save Calendar For this Site</button>
-                <button onclick="listCalendars()">List All Calendars</button>
-
-
                 <container id="hold-directions">
+                    <center>
                     <h1 class="title is-4 is-dark">First, create your calendar.</h1>
                     <div class="field">
                         <label class="label">Choose Your Timezone</label>
@@ -109,20 +111,77 @@
                             </div>
                         </div>
                     </div>
-                    <button class="button is-small is-dark" id="submit-button" onclick="getTimezone()">Create My Calendar!</button>
+                    <button class="button is-small is-dark" id="submit-button" onclick="getTimezone()">Save Timezone</button>
+                </center>
                 </container>
             </center>
         </article>
-    </div>
-    </div>
-    <br>
-</br>
-    <div id = "after-calendar" style="visibility: hidden;" class="container is-primary">
-        <center>
-        <button onclick="addEvents()">add events to secondary calendar</button>
-        <button onclick="getCalendarEvents()">get events for secondary calendar</button>
-        <div style="padding: 3%;"class = "container" id = "hold-calendar"></div>
-        </center>
+            </div>
+        </div>
+        </div>
+        </div>
+        
+        <div class="tile" id = "after-calendar" style="visibility: hidden; z-index: 9;">
+            <div class="tile is-parent">
+                <div class = "tile is-parent">
+                    <article id = "calendar-tile"style="background-color: #ffcadf;"class="tile is-child box">
+                        <center>
+                    <div class = "container" id = "hold-calendar"></div>
+                        </center>
+                    </article>
+                </div>
+
+                <div class = "tile is-parent">
+                    <article id = "event-buttons-tile"style="background-color: #ffe9c3;"class="tile is-child box">
+                        <center>
+                            <div style="padding: 3%;">
+                                <h class = "title is-4">Create New Event</h>
+                             </div>
+                            <div style="padding: 2%;">
+                                <label class="label">Event Title</label>
+                                <input class="input in is-normal" id="event-title" type="text">
+                            </div>
+
+                            <div style="padding: 2%;">
+                                <label class="label">Event Description</label>
+                                <textarea class="textarea in is-normal" id="event-desc" type="text"></textarea>
+                            </div>
+
+                            <div style="padding: 2%;">
+                                <label class="label">Event Start Date ("yyyy-mm-dd" format)</label>
+                                <input class="input in is-normal" id="event-start-date" type="text">
+                            </div>
+
+                            <div style="padding: 2%;">
+                                <label class="label">Event End Date ("yyyy-mm-dd" format)</label>
+                                <input class="input in is-normal" id="event-end-date" type="text">
+                            </div>
+
+                            <div style="padding: 2%;">
+                                <button class = "button is-dark"onclick="addEvents()">Add Event</button>
+                            </div>
+                        </center>
+                    </article>
+                </div>
+
+                <div class="tile is-parent">
+                    <article id = "primary-events-tile"style="background-color: #ffcadf;"class="tile is-child box">
+                        <center>
+                            <div style="padding: 3%;">
+                                <h class = "title is-4">Upcoming Events</h>
+                             </div>
+                            <div style="padding: 3%;">
+                                <button class = "button is-dark"onclick="getCalendarEvents()">Display Site Calendar Events</button>
+                            </div>
+                            <div style="padding: 3%;">
+                                <button class = "button is-dark"onclick="getPrimaryCalendarEvents()">Display Primary Calendar Events</button>
+                            </div>
+                        </center>
+                        <div id = "hold-upcoming-events"class = "tile is-parent is-vertical">
+                        </div>
+                    </article>
+            </div>
+        </div>
     </div>
 
 
