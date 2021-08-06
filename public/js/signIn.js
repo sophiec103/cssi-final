@@ -67,4 +67,3 @@ const checkIfRegistered = (user) => {
             console.error(error);
         })
 }
-

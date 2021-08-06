@@ -39,11 +39,11 @@ window.onload = (event) => {
                     } 
                     
                     if(id == "name"){
-                        document.querySelector("#welcome").innerHTML = "Welcome, "+ data[id];
+                        document.querySelector("#welcome2").innerHTML = "Welcome, "+ data[id];
                     }
 
                     if (id == "university") {
-                        document.querySelector("#welcome2").innerHTML = "Your personalized website for "+ data[id];
+                        document.querySelector("#welcome").innerHTML = data[id] + " Student Website";
                     }
                 }
                 updateCards();
