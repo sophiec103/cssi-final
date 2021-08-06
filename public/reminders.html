@@ -24,12 +24,18 @@
     <script defer src="/__/firebase/8.3.1/firebase-database.js"></script>
     <script defer src="/__/firebase/init.js?useEmulator=true"></script>
     <script defer src="js/reminders.js"></script>
+    <style type="text/css">
+        html,
+      body {
+            background-color: #363636
+        }
+    </style>
   </head>
   
   <body>
      <nav class="navbar is-dark" role="navigation" aria-label="main navigation">
         <div class="navbar-brand">
-            <a class="navbar-item" href="https://bulma.io">
+            <a class="navbar-item" href="/">
                 <img src="./pjs logo.png" width="59" height="28">
             </a>
 
@@ -63,7 +69,7 @@
                             Food
                         </a>
                         <hr class="navbar-divider">
-                        <a class="navbar-item">
+                        <a class="navbar-item" href = "settings.html">
                             Settings
                         </a>
                     </div>
@@ -86,13 +92,12 @@
         </div>
       </div>
     </div>
-    <br>
     </section>
     <footer class="footer dark">
       <div class="container">
-        <div class="content has-text-centered">
+        <div class="content has-text-centered" id="access-archives">
           <p>
-            <i>Access the <a href="/archives.html">Archives</a></i>
+            <i>Access the <a href="javascript:showArchive()">Archives</a></i>
           </p>
         </div>
       </div>
@@ -113,6 +118,7 @@
                 <textarea class="textarea is-normal in" id="editTextInput" type="text"></textarea>
                 <input id="noteId" type="hidden">
             </section>
+            
             <footer class="modal-card-foot">
                 <button class="button is-success" onclick="saveEditedNote()">
                     Save changes

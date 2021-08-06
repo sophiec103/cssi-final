@@ -49,3 +49,18 @@
     position: relative;
     overflow: hidden;
 }
+
+.center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto; 
+  margin-top: auto;
+  margin-bottom: auto;
+  max-height: 100%;
+  max-width: 100%;
+  object-fit: contain;
+}
+
+a {
+    margin: 0px;
+}
