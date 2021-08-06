@@ -36,8 +36,14 @@ window.onload = (event) => {
                 for (const id in data) {
                     if(id == "logo"){
                         document.querySelector("#centerImg").src = data[id];
-                    }else if(id == "name"){
+                    } 
+                    
+                    if(id == "name"){
                         document.querySelector("#welcome").innerHTML = "Welcome, "+ data[id];
+                    }
+
+                    if (id == "university") {
+                        document.querySelector("#welcome2").innerHTML = "Your personalized website for "+ data[id];
                     }
                 }
                 updateCards();
