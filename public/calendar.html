@@ -7,6 +7,15 @@
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css"
     />
+
+        <style type="text/css">
+        html,
+      body {
+            background-color: #363636
+        }
+    </style>
+
+
   </head>
   <body>
     <nav class="navbar is-dark" role="navigation" aria-label="main navigation">
@@ -54,40 +63,68 @@
             </div>
         </div>
     </nav>
-    <p>Calendar</p>
+
+    <div class="column has-text-centered">
+        <h1 style = "color: white;"class="title">Calendar</h1>
+    </div>
 
     <!--Add buttons to initiate auth sequence and sign out-->
-    <button id="authorize_button" style="display: none;">Authorize</button>
-    <button id="signout_button" style="display: none;">Sign Out</button>
-
-    <div>
-        <br>
-    </br>
-        <button onclick="listCalendars()">List All Calendars</button>
+    <div id = "hold-auth">
+        <center>
+            <button id="authorize_button" style="display: none;">Authorize</button>
+            <button id="signout_button" style="display: none;">Sign Out</button>
+        </center>
     </div>
 
-    <div>
-    <br>
-    </br>
-        <button onclick="createCalendar()">Create Calendar For This Site</button>
-    </div>
 
-    <div>
-    <br>
-    </br>
-        <button onclick="getLastCalendar()">Get last calendar ID</button>
-    </div>
+     <div class="tile" id = "before-calendar" style="visibility: visible;">
+      <div class="tile is-parent is-vertical">
+        <article style="background-color: #ffcadf;"class="tile is-child notification">
+            <center>
+                <button onclick="makeCalendarPublic()">make site calendar public</button>
+                <button onclick="getEmbedLink()">get embed link</button>
+                <button onclick="getSiteCalendarId()">Get Site Calendar Id</button>
+                <button onclick="saveCalendar()">Create And Save Calendar For this Site</button>
+                <button onclick="listCalendars()">List All Calendars</button>
 
-    <div>
-    <br>
-    </br>
-        <button onclick="getCalendarEvents()">get events for secondary calendar</button>
-    </div>
 
-    <div>
+                <container id="hold-directions">
+                    <h1 class="title is-4 is-dark">First, create your calendar.</h1>
+                    <div class="field">
+                        <label class="label">Choose Your Timezone</label>
+                        <div class="control">
+                            <div class="select">
+                                <select id = "timezone-select">
+                                    <option>US/Alaska</option>
+                                    <option>US/Aleutian</option>
+                                    <option>US/Arizona</option>
+                                    <option>US/Central</option>
+                                    <option>US/East-Indiana</option>
+                                    <option>US/Eastern</option>
+                                    <option>US/Hawaii</option>
+                                    <option>US/Indiana-Starke</option>
+                                    <option>US/Michigan</option>
+                                    <option>US/Mountain</option>
+                                    <option>US/Pacific</option>
+                                    <option>US/Pacific-New</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="button is-small is-dark" id="submit-button" onclick="getTimezone()">Create My Calendar!</button>
+                </container>
+            </center>
+        </article>
+    </div>
+    </div>
     <br>
-    </br>
+</br>
+    <div id = "after-calendar" style="visibility: hidden;" class="container is-primary">
+        <center>
         <button onclick="addEvents()">add events to secondary calendar</button>
+        <button onclick="getCalendarEvents()">get events for secondary calendar</button>
+        <div style="padding: 3%;"class = "container" id = "hold-calendar"></div>
+        </center>
     </div>
 
 
@@ -103,7 +140,5 @@
       onload="this.onload=function(){};handleClientLoad()"
       onreadystatechange="if (this.readyState === 'complete') this.onload()">
     </script>
-
-    <pre id="content" style="white-space: pre-wrap;"></pre>
   </body>
 </html>
